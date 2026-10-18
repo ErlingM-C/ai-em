@@ -1,0 +1,46 @@
+.door {
+  position: absolute;
+  container-type: size;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 2px dashed rgba(255, 255, 255, 0.75);
+  border-radius: 6%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+  transition:
+    background-color 150ms ease,
+    transform 150ms ease;
+}
+
+.door:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.04);
+}
+
+.door:focus-visible {
+  outline: 3px solid #ffd54a;
+  outline-offset: 2px;
+}
+
+/* Siffran skalas efter luckans storlek, så att den passar i både små och stora luckor. */
+.number {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 55cqmin;
+  font-weight: bold;
+  line-height: 1;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .door {
+    transition: none;
+  }
+
+  .door:hover {
+    transform: none;
+  }
+}

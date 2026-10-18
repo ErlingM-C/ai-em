@@ -22,7 +22,13 @@ function App() {
     case 'error':
       return <ErrorPage errors={state.errors} />
     case 'ready':
-      return <Calendar title={state.config.title} background={state.config.background} />
+      return (
+        <Calendar
+          title={state.config.title}
+          background={state.config.background}
+          doors={state.config.doors}
+        />
+      )
   }
 }
 
