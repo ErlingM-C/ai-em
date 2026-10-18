@@ -24,16 +24,16 @@ function boardStyle(background: Background): CSSProperties {
   const ratio = background.width / background.height
   return {
     aspectRatio: `${background.width} / ${background.height}`,
-    width: `min(100%, calc((100dvh - 5rem) * ${ratio}))`,
+    width: `min(100%, calc(100dvh * ${ratio}))`,
   }
 }
 
 function Calendar({ title, background, doors, message, onDoorClick, onPhotoClick }: CalendarProps) {
   return (
     <main className={styles.page}>
-      <h1 className={styles.title}>{title}</h1>
       <div className={styles.board} style={boardStyle(background)}>
         <img className={styles.background} src={background.image} alt="" aria-hidden="true" />
+        <h1 className={styles.title}>{title}</h1>
         {doors.map(({ door, isOpen, isOpenable }) => (
           <Door
             key={door.day}
@@ -48,10 +48,10 @@ function Calendar({ title, background, doors, message, onDoorClick, onPhotoClick
             onPhotoClick={onPhotoClick}
           />
         ))}
+        <p className={styles.message} role="status">
+          {message !== null && <span className={styles.messageText}>{message}</span>}
+        </p>
       </div>
-      <p className={styles.message} role="status">
-        {message}
-      </p>
       <p className={styles.rotateHint}>Vänd telefonen för att se kalendern större.</p>
     </main>
   )

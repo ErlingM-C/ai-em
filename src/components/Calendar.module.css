@@ -1,23 +1,16 @@
 .page {
   min-height: 100dvh;
-  padding: 0.75rem 0;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 0.75rem;
   background: #0b1a3a;
   color: #fff;
 }
 
-.title {
-  margin: 0;
-  padding: 0 1rem;
-  font-size: clamp(1.25rem, 4vw, 2rem);
-  text-align: center;
-}
-
 /*
- * Hela bilden ska synas utan att sidan behöver scrollas, även på breda skärmar.
+ * Kalendern fyller så mycket av skärmen som möjligt utan att sidan behöver scrollas.
  * Bredd och proportioner sätts i Calendar efter bakgrundsbildens format.
  */
 .board {
@@ -33,11 +26,43 @@
   object-fit: cover;
 }
 
+/* Rubriken ligger ovanpå bildens överkant. Klick går igenom den till luckorna. */
+.title {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1;
+  margin: 0;
+  padding: clamp(0.25rem, 1.5vw, 1rem) 1rem 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(1rem, 3.2vw, 2.75rem);
+  text-align: center;
+  text-shadow:
+    0 0 4px rgba(0, 0, 0, 0.7),
+    0 2px 12px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+}
+
+/* Meddelanden, till exempel om låsta luckor, visas som en ruta ovanpå bildens nederkant. */
 .message {
-  min-height: 1.5em;
+  position: absolute;
+  right: 0;
+  bottom: clamp(0.5rem, 2vw, 1.5rem);
+  left: 0;
+  z-index: 1;
   margin: 0;
   padding: 0 1rem;
   text-align: center;
+  pointer-events: none;
+}
+
+.messageText {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  background: rgba(5, 8, 40, 0.8);
+  font-size: clamp(0.875rem, 1.6vw, 1.125rem);
 }
 
 .rotateHint {
