@@ -1,0 +1,252 @@
+{
+  "version": 1,
+  "title": "Exempelkalender",
+  "year": 2026,
+  "background": {
+    "image": "/examples/demo/bakgrund.svg",
+    "width": 1920,
+    "height": 1080
+  },
+  "doors": [
+    {
+      "day": 17,
+      "x": 111,
+      "y": 83,
+      "width": 185,
+      "height": 185,
+      "image": "/examples/demo/dag17.svg",
+      "alt": "Ett stort 17 och ordet december",
+      "text": "Ta fram julpyntet."
+    },
+    {
+      "day": 4,
+      "x": 402,
+      "y": 96,
+      "width": 170,
+      "height": 170,
+      "image": "/examples/demo/dag04.svg",
+      "alt": "Ett stort 4 och ordet december",
+      "text": "Glöm inte att vattna julgranen."
+    },
+    {
+      "day": 22,
+      "x": 696,
+      "y": 78,
+      "width": 200,
+      "height": 200,
+      "image": "/examples/demo/dag22.svg",
+      "alt": "Ett stort 22 och ordet december",
+      "text": "Dags att köpa granen."
+    },
+    {
+      "day": 9,
+      "x": 1027,
+      "y": 91,
+      "width": 185,
+      "height": 185,
+      "image": "/examples/demo/dag09.svg",
+      "alt": "Ett stort 9 och ordet december",
+      "text": "Dags att slå in paket."
+    },
+    {
+      "day": 1,
+      "x": 1303,
+      "y": 99,
+      "width": 185,
+      "height": 185,
+      "image": "/examples/demo/dag01.svg",
+      "alt": "Ett stort 1 och ordet december",
+      "text": "Välkommen till exempelkalendern!"
+    },
+    {
+      "day": 14,
+      "x": 1612,
+      "y": 86,
+      "width": 200,
+      "height": 200,
+      "image": "/examples/demo/dag14.svg",
+      "alt": "Ett stort 14 och ordet december",
+      "text": "Bara tio dagar kvar."
+    },
+    {
+      "day": 11,
+      "x": 113,
+      "y": 329,
+      "width": 215,
+      "height": 215,
+      "image": "/examples/demo/dag11.svg",
+      "alt": "Ett stort 11 och ordet december",
+      "text": "Skicka ett julkort till någon."
+    },
+    {
+      "day": 20,
+      "x": 410,
+      "y": 320,
+      "width": 170,
+      "height": 170,
+      "image": "/examples/demo/dag20.svg",
+      "alt": "Ett stort 20 och ordet december",
+      "text": "Vinterns längsta natt närmar sig."
+    },
+    {
+      "day": 6,
+      "x": 728,
+      "y": 334,
+      "width": 200,
+      "height": 200,
+      "image": "/examples/demo/dag06.svg",
+      "alt": "Ett stort 6 och ordet december",
+      "text": "Pepparkaksdeg i kylen?"
+    },
+    {
+      "day": 24,
+      "x": 1022,
+      "y": 316,
+      "width": 170,
+      "height": 170,
+      "image": "/examples/demo/dag24.svg",
+      "alt": "Ett stort 24 och ordet december",
+      "text": "God jul!"
+    },
+    {
+      "day": 15,
+      "x": 1325,
+      "y": 325,
+      "width": 215,
+      "height": 215,
+      "image": "/examples/demo/dag15.svg",
+      "alt": "Ett stort 15 och ordet december",
+      "text": "Gör en snölykta."
+    },
+    {
+      "day": 3,
+      "x": 1629,
+      "y": 337,
+      "width": 215,
+      "height": 215,
+      "image": "/examples/demo/dag03.svg",
+      "alt": "Ett stort 3 och ordet december",
+      "text": "Nu tänds det första ljuset."
+    },
+    {
+      "day": 8,
+      "x": 114,
+      "y": 572,
+      "width": 170,
+      "height": 170,
+      "image": "/examples/demo/dag08.svg",
+      "alt": "Ett stort 8 och ordet december",
+      "text": "Vem har gömt tomtenissen?"
+    },
+    {
+      "day": 13,
+      "x": 399,
+      "y": 567,
+      "width": 185,
+      "height": 185,
+      "image": "/examples/demo/dag13.svg",
+      "alt": "Ett stort 13 och ordet december",
+      "text": "Luciadagen – sjung med!"
+    },
+    {
+      "day": 2,
+      "x": 716,
+      "y": 578,
+      "width": 200,
+      "height": 200,
+      "image": "/examples/demo/dag02.svg",
+      "alt": "Ett stort 2 och ordet december",
+      "text": "Dags att skriva önskelista."
+    },
+    {
+      "day": 19,
+      "x": 997,
+      "y": 561,
+      "width": 215,
+      "height": 215,
+      "image": "/examples/demo/dag19.svg",
+      "alt": "Ett stort 19 och ordet december",
+      "text": "Ett pussel för hela familjen."
+    },
+    {
+      "day": 23,
+      "x": 1309,
+      "y": 557,
+      "width": 215,
+      "height": 215,
+      "image": "/examples/demo/dag23.svg",
+      "alt": "Ett stort 23 och ordet december",
+      "text": "Dan före dan före jul."
+    },
+    {
+      "day": 10,
+      "x": 1600,
+      "y": 570,
+      "width": 200,
+      "height": 200,
+      "image": "/examples/demo/dag10.svg",
+      "alt": "Ett stort 10 och ordet december",
+      "text": "Lyssna på din favoritjullåt."
+    },
+    {
+      "day": 21,
+      "x": 123,
+      "y": 799,
+      "width": 185,
+      "height": 185,
+      "image": "/examples/demo/dag21.svg",
+      "alt": "Ett stort 21 och ordet december",
+      "text": "Vintersolståndet – nu vänder det."
+    },
+    {
+      "day": 5,
+      "x": 415,
+      "y": 815,
+      "width": 185,
+      "height": 185,
+      "image": "/examples/demo/dag05.svg",
+      "alt": "Ett stort 5 och ordet december",
+      "text": "En kopp varm choklad gör underverk."
+    },
+    {
+      "day": 12,
+      "x": 726,
+      "y": 808,
+      "width": 170,
+      "height": 170,
+      "image": "/examples/demo/dag12.svg",
+      "alt": "Ett stort 12 och ordet december",
+      "text": "Lussekatter till frukost?"
+    },
+    {
+      "day": 18,
+      "x": 1024,
+      "y": 802,
+      "width": 200,
+      "height": 200,
+      "image": "/examples/demo/dag18.svg",
+      "alt": "Ett stort 18 och ordet december",
+      "text": "Bjud grannen på glögg."
+    },
+    {
+      "day": 7,
+      "x": 1301,
+      "y": 813,
+      "width": 215,
+      "height": 215,
+      "image": "/examples/demo/dag07.svg",
+      "alt": "Ett stort 7 och ordet december",
+      "text": "Gå en promenad i snön."
+    },
+    {
+      "day": 16,
+      "x": 1598,
+      "y": 804,
+      "width": 170,
+      "height": 170,
+      "image": "/examples/demo/dag16.svg",
+      "alt": "Ett stort 16 och ordet december",
+      "text": "Saffran, russin och mandel."
+    }
+  ]
+}

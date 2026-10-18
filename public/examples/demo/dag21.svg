@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+<rect width="800" height="600" fill="#1e6b3a"/>
+<text x="400" y="360" font-family="Georgia, serif" font-size="260" fill="#fff" text-anchor="middle">21</text>
+<text x="400" y="470" font-family="Georgia, serif" font-size="48" fill="#fff" opacity="0.85" text-anchor="middle">december</text>
+</svg>
