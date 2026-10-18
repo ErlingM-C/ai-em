@@ -1,4 +1,11 @@
-import { useEffect, useRef, useState, type MouseEvent, type SyntheticEvent } from 'react'
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type MouseEvent,
+  type SyntheticEvent,
+} from 'react'
 import { flipTransform, type Rect } from '../lib/flipTransform.ts'
 import styles from './ImageModal.module.css'
 
@@ -29,6 +36,21 @@ function growKeyframes(dialog: HTMLDialogElement, origin: HTMLElement): Keyframe
   ]
 }
 
+/**
+ * Bildrutan får bildens egna proportioner och blir så stor som möjligt, så att
+ * ytan bredvid bilden är tom och går att klicka på för att stänga.
+ * Innan bilden har laddats fyller rutan hela modalen.
+ */
+function figureStyle(aspectRatio: number | null): CSSProperties {
+  if (aspectRatio === null) {
+    return { width: '100%', height: '100%' }
+  }
+  return {
+    aspectRatio: String(aspectRatio),
+    width: `min(100%, calc((100dvh - 2rem) * ${aspectRatio}))`,
+  }
+}
+
 function animateBackdrop(dialog: HTMLDialogElement, from: number, to: number, duration: number): void {
   try {
     dialog.animate({ opacity: [from, to] }, { duration, pseudoElement: '::backdrop', fill: 'forwards' })
@@ -47,6 +69,14 @@ function ImageModal({ day, image, alt, text, origin, reducedMotion, onClose }: I
   const contentRef = useRef<HTMLDivElement>(null)
   const closingRef = useRef(false)
   const [imageFailed, setImageFailed] = useState(false)
+  const [aspectRatio, setAspectRatio] = useState<number | null>(null)
+
+  function handleImageLoad(event: SyntheticEvent<HTMLImageElement>): void {
+    const { naturalWidth, naturalHeight } = event.currentTarget
+    if (naturalWidth > 0 && naturalHeight > 0) {
+      setAspectRatio(naturalWidth / naturalHeight)
+    }
+  }
 
   useEffect(() => {
     const dialog = dialogRef.current
@@ -95,9 +125,10 @@ function ImageModal({ day, image, alt, text, origin, reducedMotion, onClose }: I
     closeDialog()
   }
 
-  // Klick utanför innehållet, på den mörka bakgrunden, stänger modalen.
-  function handleBackdropClick(event: MouseEvent<HTMLDialogElement>): void {
-    if (event.target === event.currentTarget) {
+  // Klick på tom yta stänger modalen: den mörka bakgrunden runt modalen
+  // och ytan bredvid bilden. Klick på bilden, texten och krysset räknas inte.
+  function handleOutsideClick(event: MouseEvent<HTMLDialogElement>): void {
+    if (event.target === event.currentTarget || event.target === contentRef.current) {
       closeDialog()
     }
   }
@@ -109,23 +140,33 @@ function ImageModal({ day, image, alt, text, origin, reducedMotion, onClose }: I
       aria-labelledby="image-modal-title"
       onCancel={handleCancel}
       onClose={onClose}
-      onClick={handleBackdropClick}
+      onClick={handleOutsideClick}
     >
       <div ref={contentRef} className={styles.content}>
-        <h2 id="image-modal-title" className={styles.title}>
-          {day} december
-        </h2>
-        {imageFailed ? (
-          <p className={styles.imageError} role="alert">
-            Bilden kunde inte laddas. Kontrollera att adressen i kalenderfilen stämmer: {image}
-          </p>
-        ) : (
-          <img className={styles.image} src={image} alt={alt} onError={() => setImageFailed(true)} />
-        )}
-        <p className={styles.text}>{text}</p>
-        <button type="button" className={styles.close} onClick={closeDialog}>
-          Stäng
+        <button type="button" className={styles.close} aria-label="Stäng" onClick={closeDialog}>
+          <span aria-hidden="true">✕</span>
         </button>
+        <figure className={styles.figure} style={figureStyle(imageFailed ? null : aspectRatio)}>
+          {imageFailed ? (
+            <p className={styles.imageError} role="alert">
+              Bilden kunde inte laddas. Kontrollera att adressen i kalenderfilen stämmer: {image}
+            </p>
+          ) : (
+            <img
+              className={styles.image}
+              src={image}
+              alt={alt}
+              onLoad={handleImageLoad}
+              onError={() => setImageFailed(true)}
+            />
+          )}
+          <figcaption className={styles.caption}>
+            <h2 id="image-modal-title" className={styles.title}>
+              {day} december
+            </h2>
+            <p className={styles.text}>{text}</p>
+          </figcaption>
+        </figure>
       </div>
     </dialog>
   )
