@@ -7,6 +7,8 @@
   background: #fffaf0;
   color: #222;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  /* Animeringen från luckan räknar med att modalen skalas från övre vänstra hörnet. */
+  transform-origin: top left;
 }
 
 .dialog::backdrop {

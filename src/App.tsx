@@ -8,6 +8,7 @@ import { useCalendarConfig } from './hooks/useCalendarConfig.ts'
 import { useOpenedDoors } from './hooks/useOpenedDoors.ts'
 import { readToday } from './io/clock.ts'
 import { readOrigin, readPreviewParam } from './io/location.ts'
+import { readPrefersReducedMotion } from './io/motion.ts'
 import type { CalendarConfig } from './lib/config.ts'
 import { isDoorOpenable } from './lib/isDoorOpenable.ts'
 
@@ -21,7 +22,8 @@ function CalendarController({ config }: CalendarControllerProps) {
   const [previewMode] = useState(readPreviewParam)
   const { openedDays, openDoor, closeDoor } = useOpenedDoors()
   const [message, setMessage] = useState<string | null>(null)
-  const [shownDay, setShownDay] = useState<number | null>(null)
+  const [shown, setShown] = useState<{ day: number; origin: HTMLElement } | null>(null)
+  const [reducedMotion] = useState(readPrefersReducedMotion)
 
   const doors: DoorView[] = config.doors.map((door) => ({
     door,
@@ -41,7 +43,7 @@ function CalendarController({ config }: CalendarControllerProps) {
     }
   }
 
-  const shownDoor = config.doors.find((door) => door.day === shownDay)
+  const shownDoor = config.doors.find((door) => door.day === shown?.day)
 
   return (
     <>
@@ -51,16 +53,18 @@ function CalendarController({ config }: CalendarControllerProps) {
         doors={doors}
         message={message}
         onDoorClick={handleDoorClick}
-        onPhotoClick={setShownDay}
+        onPhotoClick={(day, origin) => setShown({ day, origin })}
       />
-      {shownDoor !== undefined && (
+      {shown !== null && shownDoor !== undefined && (
         <ImageModal
           key={shownDoor.day}
           day={shownDoor.day}
           image={shownDoor.image}
           alt={shownDoor.alt}
           text={shownDoor.text}
-          onClose={() => setShownDay(null)}
+          origin={shown.origin}
+          reducedMotion={reducedMotion}
+          onClose={() => setShown(null)}
         />
       )}
     </>

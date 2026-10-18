@@ -15,7 +15,7 @@ type CalendarProps = {
   doors: DoorView[]
   message: string | null
   onDoorClick: (day: number) => void
-  onPhotoClick: (day: number) => void
+  onPhotoClick: (day: number, origin: HTMLElement) => void
 }
 
 function Calendar({ title, background, doors, message, onDoorClick, onPhotoClick }: CalendarProps) {

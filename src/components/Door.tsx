@@ -11,7 +11,7 @@ type DoorProps = {
   isOpen: boolean
   isOpenable: boolean
   onDoorClick: (day: number) => void
-  onPhotoClick: (day: number) => void
+  onPhotoClick: (day: number, origin: HTMLElement) => void
 }
 
 function leafLabel(day: number, isOpen: boolean, isOpenable: boolean): string {
@@ -69,7 +69,7 @@ function Door(props: DoorProps) {
           className={styles.photoButton}
           aria-label={`Visa lucka ${day} i större format: ${alt}`}
           disabled={!isOpen}
-          onClick={() => props.onPhotoClick(day)}
+          onClick={(event) => props.onPhotoClick(day, event.currentTarget)}
         >
           <img className={styles.photo} src={image} alt="" />
         </button>
