@@ -10,12 +10,13 @@ type DoorProps = {
   alt: string
   isOpen: boolean
   isOpenable: boolean
-  onClick: (day: number) => void
+  onDoorClick: (day: number) => void
+  onPhotoClick: (day: number) => void
 }
 
-function doorLabel(day: number, alt: string, isOpen: boolean, isOpenable: boolean): string {
+function leafLabel(day: number, isOpen: boolean, isOpenable: boolean): string {
   if (isOpen) {
-    return `Lucka ${day}, öppnad: ${alt}. Stäng luckan`
+    return `Stäng lucka ${day}`
   }
   return isOpenable ? `Lucka ${day}` : `Lucka ${day}, låst till ${day} december`
 }
@@ -29,28 +30,29 @@ function toPercentStyle(position: DoorPosition): CSSProperties {
   }
 }
 
-function Door({ day, position, backgroundImage, image, alt, isOpen, isOpenable, onClick }: DoorProps) {
+function Door(props: DoorProps) {
+  const { day, position, backgroundImage, image, alt, isOpen, isOpenable } = props
+
   // Bilden ligger kvar efter att luckan stängts, så att den syns medan luckan svänger igen.
   const [photoMounted, setPhotoMounted] = useState(isOpen)
   if (isOpen && !photoMounted) {
     setPhotoMounted(true)
   }
 
-  const slotClass = [styles.slot, isOpen && styles.slotOpen, !isOpenable && styles.locked]
+  const slotClass = isOpen ? `${styles.slot} ${styles.slotOpen}` : styles.slot
+  const leafClass = [styles.leaf, isOpen && styles.open, !isOpenable && styles.locked]
     .filter(Boolean)
     .join(' ')
 
   return (
-    <button
-      type="button"
-      className={slotClass}
-      style={toPercentStyle(position)}
-      aria-label={doorLabel(day, alt, isOpen, isOpenable)}
-      onClick={() => onClick(day)}
-    >
-      {photoMounted && <img className={styles.photo} src={image} alt="" />}
-      <span className={isOpen ? `${styles.leaf} ${styles.open}` : styles.leaf} aria-hidden="true">
-        <span className={styles.front}>
+    <div className={slotClass} style={toPercentStyle(position)}>
+      <button
+        type="button"
+        className={leafClass}
+        aria-label={leafLabel(day, isOpen, isOpenable)}
+        onClick={() => props.onDoorClick(day)}
+      >
+        <span className={styles.front} aria-hidden="true">
           <img
             className={styles.frontImage}
             src={backgroundImage}
@@ -59,9 +61,20 @@ function Door({ day, position, backgroundImage, image, alt, isOpen, isOpenable, 
           />
           <span className={styles.number}>{day}</span>
         </span>
-        <span className={styles.back} />
-      </span>
-    </button>
+        <span className={styles.back} aria-hidden="true" />
+      </button>
+      {photoMounted && (
+        <button
+          type="button"
+          className={styles.photoButton}
+          aria-label={`Visa lucka ${day} i större format: ${alt}`}
+          disabled={!isOpen}
+          onClick={() => props.onPhotoClick(day)}
+        >
+          <img className={styles.photo} src={image} alt="" />
+        </button>
+      )}
+    </div>
   )
 }
 

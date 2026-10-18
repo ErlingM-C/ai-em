@@ -15,9 +15,10 @@ type CalendarProps = {
   doors: DoorView[]
   message: string | null
   onDoorClick: (day: number) => void
+  onPhotoClick: (day: number) => void
 }
 
-function Calendar({ title, background, doors, message, onDoorClick }: CalendarProps) {
+function Calendar({ title, background, doors, message, onDoorClick, onPhotoClick }: CalendarProps) {
   return (
     <main className={styles.page}>
       <h1 className={styles.title}>{title}</h1>
@@ -33,7 +34,8 @@ function Calendar({ title, background, doors, message, onDoorClick }: CalendarPr
             alt={door.alt}
             isOpen={isOpen}
             isOpenable={isOpenable}
-            onClick={onDoorClick}
+            onDoorClick={onDoorClick}
+            onPhotoClick={onPhotoClick}
           />
         ))}
       </div>

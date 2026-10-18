@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Calendar, { type DoorView } from './components/Calendar.tsx'
 import ErrorPage from './components/ErrorPage.tsx'
+import ImageModal from './components/ImageModal.tsx'
 import StartPage from './components/StartPage.tsx'
 import StatusPage from './components/StatusPage.tsx'
 import { useCalendarConfig } from './hooks/useCalendarConfig.ts'
@@ -20,6 +21,7 @@ function CalendarController({ config }: CalendarControllerProps) {
   const [previewMode] = useState(readPreviewParam)
   const { openedDays, openDoor, closeDoor } = useOpenedDoors()
   const [message, setMessage] = useState<string | null>(null)
+  const [shownDay, setShownDay] = useState<number | null>(null)
 
   const doors: DoorView[] = config.doors.map((door) => ({
     door,
@@ -39,14 +41,29 @@ function CalendarController({ config }: CalendarControllerProps) {
     }
   }
 
+  const shownDoor = config.doors.find((door) => door.day === shownDay)
+
   return (
-    <Calendar
-      title={config.title}
-      background={config.background}
-      doors={doors}
-      message={message}
-      onDoorClick={handleDoorClick}
-    />
+    <>
+      <Calendar
+        title={config.title}
+        background={config.background}
+        doors={doors}
+        message={message}
+        onDoorClick={handleDoorClick}
+        onPhotoClick={setShownDay}
+      />
+      {shownDoor !== undefined && (
+        <ImageModal
+          key={shownDoor.day}
+          day={shownDoor.day}
+          image={shownDoor.image}
+          alt={shownDoor.alt}
+          text={shownDoor.text}
+          onClose={() => setShownDay(null)}
+        />
+      )}
+    </>
   )
 }
 
