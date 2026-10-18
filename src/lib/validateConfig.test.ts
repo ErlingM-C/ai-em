@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { isAllowedUrl, isSixteenByNine, rectsOverlap, validateConfig } from './validateConfig.ts'
+import { isAllowedAspectRatio, isAllowedUrl, rectsOverlap, validateConfig } from './validateConfig.ts'
 
 const strict = { allowRelativeUrls: false }
 
@@ -75,11 +75,16 @@ describe('validateConfig', () => {
     expect(errorsOf({ ...makeConfig(), year })).toHaveLength(1)
   })
 
-  it('underkänner en bakgrund som inte är 16:9', () => {
+  it('underkänner en bakgrund som varken är 16:9 eller 16:10', () => {
     const background = { image: 'https://example.com/b.jpg', width: 1600, height: 1200 }
     expect(errorsOf({ ...makeConfig(), background })).toEqual([
-      'Bakgrundsbilden måste vara i 16:9-format, till exempel 1920×1080, men är 1600×1200.',
+      'Bakgrundsbilden måste vara i 16:9- eller 16:10-format, till exempel 1920×1080 eller 1920×1200, men är 1600×1200.',
     ])
+  })
+
+  it('godkänner en bakgrund i 16:10', () => {
+    const background = { image: 'https://example.com/b.jpg', width: 1920, height: 1200 }
+    expect(validateConfig({ ...makeConfig(), background }, strict).ok).toBe(true)
   })
 
   it('underkänner en bakgrund med http://', () => {
@@ -167,15 +172,20 @@ describe('isAllowedUrl', () => {
   })
 })
 
-describe('isSixteenByNine', () => {
+describe('isAllowedAspectRatio', () => {
   it.each([
     [1920, 1080, true],
     [3840, 2160, true],
     [1366, 768, true],
+    [1920, 1200, true],
+    [2560, 1600, true],
+    [1440, 900, true],
     [1600, 1200, false],
+    [2560, 1080, false],
     [1080, 1920, false],
+    [1200, 1920, false],
   ])('%i×%i ger %s', (width, height, expected) => {
-    expect(isSixteenByNine(width, height)).toBe(expected)
+    expect(isAllowedAspectRatio(width, height)).toBe(expected)
   })
 })
 

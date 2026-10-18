@@ -16,7 +16,7 @@ Mottagarna öppnar länken och får en lucka per dag, 1–24 december. Bakom var
 - Läser in kalendern från den JSON-URL som anges i parametern `config`.
 - Kontrollerar att JSON-filen följer formatet. Om den inte gör det visas ett begripligt felmeddelande, inte en trasig sida.
 - Om `config` saknas visas en startsida som förklarar hur man gör en egen kalender, med en länk till en exempelkalender (`/examples/demo.json`).
-- 24 luckor som ligger på en stor bakgrundsbild i 16:9-format. JSON-filen anger varje luckas position och storlek.
+- 24 luckor som ligger på en stor bakgrundsbild i 16:9- eller 16:10-format. JSON-filen anger varje luckas position och storlek.
 - En lucka går bara att öppna från och med sitt datum. Lucka 5 öppnas alltså tidigast 5 december det år som anges i JSON-filen.
 - När man öppnar en lucka visas bilden och texten i en större vy.
 - Webbläsaren kommer ihåg vilka luckor som är öppnade, separat för varje kalender (nyckeln baseras på config-URL:en).
@@ -29,7 +29,7 @@ Typen finns i `src/lib/config.ts` och kontrolleras av `validateConfig` i `src/li
 - `version`: alltid `1`.
 - `title`: text som inte är tom.
 - `year`: heltal 2000–2100.
-- `background`: `{ image, width, height }`. `image` är en `https://`-adress. `width` och `height` är bildens storlek i pixlar och måste vara i 16:9-format (1 % tolerans).
+- `background`: `{ image, width, height }`. `image` är en `https://`-adress. `width` och `height` är bildens storlek i pixlar och måste vara i 16:9- eller 16:10-format (1 % tolerans).
 - `doors`: exakt 24 luckor, en för varje dag 1–24. Varje lucka har:
   - `day`
   - `x`, `y`, `width` och `height` i pixlar i bakgrundsbilden. Luckan måste rymmas helt i bilden och får inte överlappa någon annan lucka.

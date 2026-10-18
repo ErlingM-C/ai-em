@@ -16,11 +16,12 @@
   text-align: center;
 }
 
-/* Hela bilden ska synas utan att sidan behöver scrollas, även på breda skärmar. */
+/*
+ * Hela bilden ska synas utan att sidan behöver scrollas, även på breda skärmar.
+ * Bredd och proportioner sätts i Calendar efter bakgrundsbildens format.
+ */
 .board {
   position: relative;
-  width: min(100%, calc((100dvh - 5rem) * 16 / 9));
-  aspect-ratio: 16 / 9;
   overflow: hidden;
   background: #29457a;
 }

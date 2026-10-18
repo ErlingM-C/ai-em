@@ -12,7 +12,8 @@ export type ValidationOptions = {
 const DOOR_COUNT = 24
 const MIN_YEAR = 2000
 const MAX_YEAR = 2100
-const ASPECT_RATIO = 16 / 9
+/** Tillåtna format för bakgrundsbilden: 16:9 och 16:10. */
+const ASPECT_RATIOS = [16 / 9, 16 / 10]
 const ASPECT_TOLERANCE = 0.01
 
 type Rect = { x: number; y: number; width: number; height: number }
@@ -40,8 +41,8 @@ export function isAllowedUrl(value: string, allowRelativeUrls: boolean): boolean
   }
 }
 
-export function isSixteenByNine(width: number, height: number): boolean {
-  return Math.abs(width / height - ASPECT_RATIO) / ASPECT_RATIO <= ASPECT_TOLERANCE
+export function isAllowedAspectRatio(width: number, height: number): boolean {
+  return ASPECT_RATIOS.some((ratio) => Math.abs(width / height - ratio) / ratio <= ASPECT_TOLERANCE)
 }
 
 export function rectsOverlap(a: Rect, b: Rect): boolean {
@@ -85,9 +86,10 @@ function validateBackground(
     errors.push('background.width och background.height måste vara positiva tal (bildens storlek i pixlar).')
     return undefined
   }
-  if (!isSixteenByNine(width, height)) {
+  if (!isAllowedAspectRatio(width, height)) {
     errors.push(
-      `Bakgrundsbilden måste vara i 16:9-format, till exempel 1920×1080, men är ${width}×${height}.`,
+      'Bakgrundsbilden måste vara i 16:9- eller 16:10-format, till exempel 1920×1080 ' +
+        `eller 1920×1200, men är ${width}×${height}.`,
     )
     return undefined
   }

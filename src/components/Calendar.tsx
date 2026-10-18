@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import type { Background, Door as DoorData } from '../lib/config.ts'
 import { doorPosition } from '../lib/doorPosition.ts'
 import Door from './Door.tsx'
@@ -18,11 +19,20 @@ type CalendarProps = {
   onPhotoClick: (day: number, origin: HTMLElement) => void
 }
 
+/** Kalenderytan får bakgrundens proportioner och blir så stor som får plats på skärmen. */
+function boardStyle(background: Background): CSSProperties {
+  const ratio = background.width / background.height
+  return {
+    aspectRatio: `${background.width} / ${background.height}`,
+    width: `min(100%, calc((100dvh - 5rem) * ${ratio}))`,
+  }
+}
+
 function Calendar({ title, background, doors, message, onDoorClick, onPhotoClick }: CalendarProps) {
   return (
     <main className={styles.page}>
       <h1 className={styles.title}>{title}</h1>
-      <div className={styles.board}>
+      <div className={styles.board} style={boardStyle(background)}>
         <img className={styles.background} src={background.image} alt="" aria-hidden="true" />
         {doors.map(({ door, isOpen, isOpenable }) => (
           <Door
