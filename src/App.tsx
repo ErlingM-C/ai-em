@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Calendar, { type DoorView } from './components/Calendar.tsx'
 import ErrorPage from './components/ErrorPage.tsx'
 import ImageModal from './components/ImageModal.tsx'
+import Snow from './components/Snow.tsx'
 import StartPage from './components/StartPage.tsx'
 import StatusPage from './components/StatusPage.tsx'
 import { useCalendarConfig } from './hooks/useCalendarConfig.ts'
@@ -47,6 +48,7 @@ function CalendarController({ config }: CalendarControllerProps) {
 
   return (
     <>
+      {!reducedMotion && <Snow placement="page" intensity={shown === null ? 'light' : 'none'} />}
       <Calendar
         title={config.title}
         background={config.background}

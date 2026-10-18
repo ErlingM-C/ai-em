@@ -1,0 +1,19 @@
+/* Snön är bara dekoration. Klick går igenom den till luckorna och bilden. */
+.snow {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Över hela fönstret och ovanpå kalendern, även över öppna luckor. */
+.page {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+}
+
+.inside {
+  position: absolute;
+  inset: 0;
+}

@@ -8,6 +8,7 @@ import {
 } from 'react'
 import { flipTransform, type Rect } from '../lib/flipTransform.ts'
 import styles from './ImageModal.module.css'
+import Snow from './Snow.tsx'
 
 type ImageModalProps = {
   day: number
@@ -167,6 +168,7 @@ function ImageModal({ day, image, alt, text, origin, reducedMotion, onClose }: I
             <p className={styles.text}>{text}</p>
           </figcaption>
         </figure>
+        {!reducedMotion && <Snow placement="inside" intensity="minimal" />}
       </div>
     </dialog>
   )
