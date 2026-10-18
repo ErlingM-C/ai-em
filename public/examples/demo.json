@@ -104,9 +104,17 @@
       "y": 316,
       "width": 170,
       "height": 170,
-      "image": "/examples/demo/dag24.svg",
-      "alt": "Ett stort 24 och ordet december",
-      "text": "God jul!"
+      "image": "/examples/demo/dag24.jpg",
+      "alt": "Tre stora guldglänsande julgranskulor under en gran pyntad med små kulor",
+      "text": "God jul!",
+      "source": {
+        "title": "Under the Christmas tree.",
+        "author": "Bernard Spragg. NZ from Christchurch, New Zealand",
+        "date": "2014-11-22",
+        "url": "https://commons.wikimedia.org/wiki/File:Under_the_Christmas_tree._(15867338637).jpg",
+        "license": "CC0 1.0 (Creative Commons Zero, Public Domain Dedication)",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/deed.en"
+      }
     },
     {
       "day": 15,
