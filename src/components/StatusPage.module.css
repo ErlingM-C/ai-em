@@ -1,0 +1,9 @@
+.page {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+.page code {
+  overflow-wrap: anywhere;
+}
