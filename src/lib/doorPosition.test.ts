@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { doorPosition } from './doorPosition.ts'
+import { backgroundSlice, doorPosition } from './doorPosition.ts'
 
 const background = { image: 'https://example.com/b.jpg', width: 1920, height: 1080 }
 const door = {
@@ -29,5 +29,23 @@ describe('doorPosition', () => {
     const position = doorPosition(corner, background)
     expect(position.left + position.width).toBe(100)
     expect(position.top + position.height).toBe(100)
+  })
+})
+
+describe('backgroundSlice', () => {
+  it('gör bakgrunden lika stor som hela kalendern och flyttar den till luckans plats', () => {
+    expect(backgroundSlice({ left: 25, top: 50, width: 10, height: 20 })).toEqual({
+      left: -250,
+      top: -250,
+      width: 1000,
+      height: 500,
+    })
+  })
+
+  it('lägger bakgrunden i hörnet för en lucka i övre vänstra hörnet', () => {
+    const slice = backgroundSlice({ left: 0, top: 0, width: 50, height: 50 })
+    expect(slice.left).toBeCloseTo(0)
+    expect(slice.top).toBeCloseTo(0)
+    expect(slice.width).toBe(200)
   })
 })

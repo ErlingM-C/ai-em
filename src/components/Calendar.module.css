@@ -32,6 +32,13 @@
   object-fit: cover;
 }
 
+.message {
+  min-height: 1.5em;
+  margin: 0;
+  padding: 0 1rem;
+  text-align: center;
+}
+
 .rotateHint {
   display: none;
   margin: 0;

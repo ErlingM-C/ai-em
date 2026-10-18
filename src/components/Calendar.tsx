@@ -3,22 +3,43 @@ import { doorPosition } from '../lib/doorPosition.ts'
 import Door from './Door.tsx'
 import styles from './Calendar.module.css'
 
+export type DoorView = {
+  door: DoorData
+  isOpen: boolean
+  isOpenable: boolean
+}
+
 type CalendarProps = {
   title: string
   background: Background
-  doors: DoorData[]
+  doors: DoorView[]
+  message: string | null
+  onDoorClick: (day: number) => void
 }
 
-function Calendar({ title, background, doors }: CalendarProps) {
+function Calendar({ title, background, doors, message, onDoorClick }: CalendarProps) {
   return (
     <main className={styles.page}>
       <h1 className={styles.title}>{title}</h1>
       <div className={styles.board}>
         <img className={styles.background} src={background.image} alt="" aria-hidden="true" />
-        {doors.map((door) => (
-          <Door key={door.day} day={door.day} position={doorPosition(door, background)} />
+        {doors.map(({ door, isOpen, isOpenable }) => (
+          <Door
+            key={door.day}
+            day={door.day}
+            position={doorPosition(door, background)}
+            backgroundImage={background.image}
+            image={door.image}
+            alt={door.alt}
+            isOpen={isOpen}
+            isOpenable={isOpenable}
+            onClick={onDoorClick}
+          />
         ))}
       </div>
+      <p className={styles.message} role="status">
+        {message}
+      </p>
       <p className={styles.rotateHint}>Vänd telefonen för att se kalendern större.</p>
     </main>
   )
