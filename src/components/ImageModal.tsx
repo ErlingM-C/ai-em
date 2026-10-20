@@ -23,6 +23,39 @@ type ImageModalProps = {
 
 const OPEN_MS = 450
 const CLOSE_MS = 350
+const OPEN_EASING = 'cubic-bezier(0.2, 0.8, 0.2, 1)'
+const CLOSE_EASING = 'cubic-bezier(0.5, 0, 0.75, 0)'
+
+/** Äldre webbläsare, till exempel Safari före 15.4, saknar showModal för <dialog>. */
+function supportsModalDialog(dialog: HTMLDialogElement): boolean {
+  return typeof dialog.showModal === 'function'
+}
+
+/**
+ * Startar en animering, eller returnerar null om det inte går. Äldre webbläsare saknar
+ * Web Animations eller kan inte animera allt (till exempel ::backdrop). Då visas
+ * ändringen direkt i stället.
+ */
+function tryAnimate(
+  element: Element,
+  keyframes: Keyframe[] | PropertyIndexedKeyframes,
+  options: KeyframeAnimationOptions,
+): Animation | null {
+  if (typeof element.animate !== 'function') {
+    return null
+  }
+  try {
+    return element.animate(keyframes, options)
+  } catch {
+    return null
+  }
+}
+
+function cancelAnimations(element: Element): void {
+  if (typeof element.getAnimations === 'function') {
+    element.getAnimations({ subtree: true }).forEach((animation) => animation.cancel())
+  }
+}
 
 function rectOf(element: Element): Rect {
   const { x, y, width, height } = element.getBoundingClientRect()
@@ -37,6 +70,33 @@ function growKeyframes(dialog: HTMLDialogElement, origin: HTMLElement): Keyframe
   ]
 }
 
+function animateBackdrop(dialog: HTMLDialogElement, from: number, to: number, duration: number): void {
+  tryAnimate(dialog, { opacity: [from, to] }, { duration, pseudoElement: '::backdrop', fill: 'forwards' })
+}
+
+/** Låter modalen växa fram ur luckan. */
+function animateOpen(dialog: HTMLDialogElement, content: HTMLElement | null, origin: HTMLElement): void {
+  tryAnimate(dialog, growKeyframes(dialog, origin), { duration: OPEN_MS, easing: OPEN_EASING })
+  if (content !== null) {
+    tryAnimate(content, { opacity: [0, 0, 1], offset: [0, 0.4, 1] }, { duration: OPEN_MS })
+  }
+  animateBackdrop(dialog, 0, 1, OPEN_MS)
+}
+
+/** Krymper modalen tillbaka till luckan. Returnerar null om webbläsaren inte kan animera. */
+function animateClose(dialog: HTMLDialogElement, content: HTMLElement | null, origin: HTMLElement): Animation | null {
+  const shrink = tryAnimate(dialog, growKeyframes(dialog, origin).reverse(), {
+    duration: CLOSE_MS,
+    easing: CLOSE_EASING,
+    fill: 'forwards',
+  })
+  if (content !== null) {
+    tryAnimate(content, { opacity: [1, 0, 0], offset: [0, 0.5, 1] }, { duration: CLOSE_MS, fill: 'forwards' })
+  }
+  animateBackdrop(dialog, 1, 0, CLOSE_MS)
+  return shrink
+}
+
 /**
  * Bildrutan får bildens egna proportioner och blir så stor som möjligt, så att
  * ytan bredvid bilden är tom och går att klicka på för att stänga.
@@ -49,14 +109,6 @@ function figureStyle(aspectRatio: number | null): CSSProperties {
   return {
     aspectRatio: String(aspectRatio),
     width: `min(100%, calc((100dvh - 2rem) * ${aspectRatio}))`,
-  }
-}
-
-function animateBackdrop(dialog: HTMLDialogElement, from: number, to: number, duration: number): void {
-  try {
-    dialog.animate({ opacity: [from, to] }, { duration, pseudoElement: '::backdrop', fill: 'forwards' })
-  } catch {
-    // Äldre webbläsare kan inte animera ::backdrop. Då visas den utan övergång.
   }
 }
 
@@ -81,18 +133,29 @@ function ImageModal({ day, image, alt, text, origin, reducedMotion, onClose }: I
 
   useEffect(() => {
     const dialog = dialogRef.current
-    if (dialog === null || dialog.open) {
+    if (dialog === null || dialog.hasAttribute('open')) {
       return
     }
-    dialog.showModal()
-    if (reducedMotion) {
-      return
+    if (supportsModalDialog(dialog)) {
+      dialog.showModal()
+    } else {
+      // Reserv: modalen visas ovanpå sidan. Krysset och klick utanför bilden stänger den,
+      // men fokus fångas inte och Escape fungerar inte.
+      dialog.setAttribute('open', '')
     }
-    const easing = 'cubic-bezier(0.2, 0.8, 0.2, 1)'
-    dialog.animate(growKeyframes(dialog, origin), { duration: OPEN_MS, easing })
-    contentRef.current?.animate({ opacity: [0, 0, 1], offset: [0, 0.4, 1] }, { duration: OPEN_MS })
-    animateBackdrop(dialog, 0, 1, OPEN_MS)
+    if (!reducedMotion) {
+      animateOpen(dialog, contentRef.current, origin)
+    }
   }, [origin, reducedMotion])
+
+  function closeNow(dialog: HTMLDialogElement): void {
+    if (supportsModalDialog(dialog)) {
+      // Utlöser close-händelsen, som anropar onClose.
+      dialog.close()
+    } else {
+      onClose()
+    }
+  }
 
   function closeDialog(): void {
     const dialog = dialogRef.current
@@ -101,22 +164,15 @@ function ImageModal({ day, image, alt, text, origin, reducedMotion, onClose }: I
     }
     closingRef.current = true
     // Avbryt en pågående öppning, så att modalens läge mäts utan transform.
-    dialog.getAnimations({ subtree: true }).forEach((animation) => animation.cancel())
-    if (reducedMotion) {
-      dialog.close()
+    cancelAnimations(dialog)
+    const shrink = reducedMotion ? null : animateClose(dialog, contentRef.current, origin)
+    if (shrink === null) {
+      closeNow(dialog)
       return
     }
-    const easing = 'cubic-bezier(0.5, 0, 0.75, 0)'
-    const shrink = dialog.animate(growKeyframes(dialog, origin).reverse(), {
-      duration: CLOSE_MS,
-      easing,
-      fill: 'forwards',
-    })
-    contentRef.current?.animate({ opacity: [1, 0, 0], offset: [0, 0.5, 1] }, { duration: CLOSE_MS, fill: 'forwards' })
-    animateBackdrop(dialog, 1, 0, CLOSE_MS)
     shrink.finished.then(
-      () => dialog.close(),
-      () => dialog.close(),
+      () => closeNow(dialog),
+      () => closeNow(dialog),
     )
   }
 

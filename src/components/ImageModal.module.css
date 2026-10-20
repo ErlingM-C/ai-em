@@ -1,5 +1,13 @@
 /* Modalen fyller nästan hela skärmen, med en smal kant som går att klicka på för att stänga. */
 .dialog {
+  /*
+   * Läget motsvarar webbläsarens egen stil för en modal <dialog>. Det behövs för
+   * webbläsare utan showModal, där modalen annars hamnar i sidflödet under snön.
+   */
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  margin: auto;
   width: calc(100vw - 2rem);
   max-width: none;
   height: calc(100dvh - 2rem);

@@ -4,9 +4,46 @@ export type FetchJsonResult = { ok: true; data: unknown } | { ok: false; error: 
 
 /** Största tillåtna kalenderfil. En vanlig kalenderfil är några kB. */
 const MAX_CONFIG_BYTES = 1_000_000
+/** Så länge väntar vi på kalenderfilen innan hämtningen avbryts. */
+const TIMEOUT_MS = 20_000
 
-/** Hämtar och tolkar en JSON-fil. Fel returneras som begripliga meddelanden. */
+/**
+ * Hämtar och tolkar en JSON-fil. Fel returneras som begripliga meddelanden.
+ * Om servern inte har svarat inom TIMEOUT_MS avbryts hämtningen.
+ */
 export async function fetchJson(url: string, signal: AbortSignal): Promise<FetchJsonResult> {
+  // AbortSignal.timeout och AbortSignal.any saknas i äldre webbläsare, så tidsgränsen byggs för hand.
+  const controller = new AbortController()
+  let timedOut = false
+  const timer = setTimeout(() => {
+    timedOut = true
+    controller.abort()
+  }, TIMEOUT_MS)
+  const abort = (): void => controller.abort()
+  if (signal.aborted) {
+    abort()
+  }
+  signal.addEventListener('abort', abort)
+
+  try {
+    const result = await fetchAndParse(url, controller.signal)
+    return timedOut && !result.ok ? timeoutError(url) : result
+  } finally {
+    clearTimeout(timer)
+    signal.removeEventListener('abort', abort)
+  }
+}
+
+function timeoutError(url: string): FetchJsonResult {
+  return {
+    ok: false,
+    error:
+      `Servern svarade inte inom ${TIMEOUT_MS / 1000} sekunder när kalenderfilen hämtades från ${url}. ` +
+      'Försök igen om en stund, eller kontrollera att adressen stämmer.',
+  }
+}
+
+async function fetchAndParse(url: string, signal: AbortSignal): Promise<FetchJsonResult> {
   const networkError: FetchJsonResult = {
     ok: false,
     error:

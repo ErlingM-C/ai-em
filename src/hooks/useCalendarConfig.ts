@@ -11,6 +11,9 @@ export type CalendarConfigState =
   | { status: 'error'; errors: string[] }
   | { status: 'ready'; config: CalendarConfig; configUrl: string }
 
+/** Visas om något som inte borde kunna gå fel ändå gör det, så att sidan inte fastnar i "Hämtar kalendern…". */
+const UNEXPECTED_ERROR = 'Något oväntat gick fel när kalendern lästes in. Ladda om sidan och försök igen.'
+
 async function loadConfig(param: string, signal: AbortSignal): Promise<CalendarConfigState> {
   const source = resolveConfigSource(param)
   if (!source.ok) {
@@ -37,11 +40,13 @@ export function useCalendarConfig(): CalendarConfigState {
       return
     }
     const controller = new AbortController()
-    loadConfig(param, controller.signal).then((next) => {
-      if (!controller.signal.aborted) {
-        setState(next)
-      }
-    })
+    loadConfig(param, controller.signal)
+      .catch((): CalendarConfigState => ({ status: 'error', errors: [UNEXPECTED_ERROR] }))
+      .then((next) => {
+        if (!controller.signal.aborted) {
+          setState(next)
+        }
+      })
     return () => controller.abort()
   }, [param])
 

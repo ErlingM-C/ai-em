@@ -12,3 +12,8 @@ export function readPreviewParam(): boolean {
 export function readOrigin(): string {
   return window.location.origin
 }
+
+/** Laddar om sidan, till exempel efter ett oväntat fel. */
+export function reloadPage(): void {
+  window.location.reload()
+}
