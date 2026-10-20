@@ -44,6 +44,24 @@
   pointer-events: none;
 }
 
+/* Felmeddelande när bakgrunden inte laddas. Ligger under rubriken, ovanpå luckorna. */
+.imageError {
+  position: absolute;
+  top: clamp(2rem, 7vw, 5.25rem);
+  right: 0;
+  left: 0;
+  z-index: 1;
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  background: #fde8e8;
+  color: #7a1c1c;
+  font-size: clamp(0.75rem, 1.6vw, 1rem);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
 /* Meddelanden, till exempel om låsta luckor, visas som en ruta ovanpå bildens nederkant. */
 .message {
   position: absolute;

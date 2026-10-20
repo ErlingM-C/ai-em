@@ -5,7 +5,8 @@ import styles from './Door.module.css'
 type DoorProps = {
   day: number
   position: DoorPosition
-  backgroundImage: string
+  /** Bakgrundsbilden som luckans framsida visar en bit av, eller null om den inte gick att ladda. */
+  backgroundImage: string | null
   image: string
   alt: string
   isOpen: boolean
@@ -38,8 +39,10 @@ function Door(props: DoorProps) {
   if (isOpen && !photoMounted) {
     setPhotoMounted(true)
   }
+  const [photoFailed, setPhotoFailed] = useState(false)
 
   const slotClass = isOpen ? `${styles.slot} ${styles.slotOpen}` : styles.slot
+  const frontClass = backgroundImage === null ? `${styles.front} ${styles.frontPlain}` : styles.front
   const leafClass = [styles.leaf, isOpen && styles.open, !isOpenable && styles.locked]
     .filter(Boolean)
     .join(' ')
@@ -52,13 +55,15 @@ function Door(props: DoorProps) {
         aria-label={leafLabel(day, isOpen, isOpenable)}
         onClick={() => props.onDoorClick(day)}
       >
-        <span className={styles.front} aria-hidden="true">
-          <img
-            className={styles.frontImage}
-            src={backgroundImage}
-            alt=""
-            style={toPercentStyle(backgroundSlice(position))}
-          />
+        <span className={frontClass} aria-hidden="true">
+          {backgroundImage !== null && (
+            <img
+              className={styles.frontImage}
+              src={backgroundImage}
+              alt=""
+              style={toPercentStyle(backgroundSlice(position))}
+            />
+          )}
           <span className={styles.number}>{day}</span>
         </span>
         <span className={styles.back} aria-hidden="true" />
@@ -71,7 +76,12 @@ function Door(props: DoorProps) {
           disabled={!isOpen}
           onClick={(event) => props.onPhotoClick(day, event.currentTarget)}
         >
-          <img className={styles.photo} src={image} alt="" />
+          {photoFailed ? (
+            // Modalen visar hela felmeddelandet med adressen när man klickar här.
+            <span className={styles.photoError}>Bilden kunde inte laddas</span>
+          ) : (
+            <img className={styles.photo} src={image} alt="" onError={() => setPhotoFailed(true)} />
+          )}
         </button>
       )}
     </div>

@@ -48,6 +48,20 @@
   object-fit: cover;
 }
 
+/* Visas i stället för dagens bild när den inte går att ladda. Texten skalas efter luckans storlek. */
+.photoError {
+  container-type: size;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8%;
+  font-size: clamp(0.5rem, 14cqmin, 0.875rem);
+  line-height: 1.2;
+  text-align: center;
+}
+
 .photoButton::after {
   content: '';
   position: absolute;
@@ -98,6 +112,11 @@
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.55),
     0 0 0 1px rgba(0, 0, 0, 0.35);
+}
+
+/* Framsida utan bakgrundsbild, när bakgrunden inte gick att ladda. */
+.frontPlain {
+  background: #3b5d9c;
 }
 
 .frontImage {
