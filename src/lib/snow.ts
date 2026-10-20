@@ -56,3 +56,55 @@ export function moveFlake(flake: Flake, seconds: number, time: number, width: nu
 export function hasFallenOut(flake: Flake, height: number): boolean {
   return flake.y - flake.radius > height
 }
+
+/** Nya flingor per sekund som mest, så att snöfallet tilltar gradvis. */
+const MAX_SPAWN_PER_SECOND = 60
+/** Så många nya flingor kan sparas ihop, så att de inte kommer i klump efter ett uppehåll. */
+const MAX_SPAWN_BUDGET = 5
+
+export type SnowState = {
+  flakes: Flake[]
+  /** Sant när ytan har fyllts med flingor första gången. */
+  filled: boolean
+  /** Hur många nya flingor som får skapas just nu. Fylls på med tiden. */
+  spawnBudget: number
+}
+
+export type SnowStep = {
+  intensity: SnowIntensity
+  width: number
+  height: number
+  /** Tid sedan förra steget, i sekunder. */
+  seconds: number
+  /** Aktuell tid i sekunder. Styr hur flingorna driver i sidled. */
+  time: number
+}
+
+export function initialSnowState(): SnowState {
+  return { flakes: [], filled: false, spawnBudget: 0 }
+}
+
+/**
+ * Flyttar snöfallet ett steg framåt. Första gången det ska snöa fylls ytan
+ * direkt. Därefter faller nya flingor in uppifrån tills antalet stämmer med
+ * intensiteten. Flingor som faller ut nedtill tas bort.
+ */
+export function advanceSnow(state: SnowState, step: SnowStep, random: () => number): SnowState {
+  const { intensity, width, height, seconds, time } = step
+  const target = targetFlakeCount(intensity, width, height)
+  const fillNow = !state.filled && target > 0
+  const current = fillNow
+    ? Array.from({ length: target }, () => createFlake(random, width, height, false))
+    : state.flakes
+
+  const flakes = current
+    .map((flake) => moveFlake(flake, seconds, time, width))
+    .filter((flake) => !hasFallenOut(flake, height))
+
+  let spawnBudget = Math.min(state.spawnBudget + MAX_SPAWN_PER_SECOND * seconds, MAX_SPAWN_BUDGET)
+  while (flakes.length < target && spawnBudget >= 1) {
+    flakes.push(createFlake(random, width, height, true))
+    spawnBudget -= 1
+  }
+  return { flakes, filled: state.filled || fillNow, spawnBudget }
+}

@@ -1,5 +1,14 @@
 import { describe, expect, it } from 'vitest'
-import { createFlake, hasFallenOut, moveFlake, targetFlakeCount, type Flake } from './snow.ts'
+import {
+  advanceSnow,
+  createFlake,
+  hasFallenOut,
+  initialSnowState,
+  moveFlake,
+  targetFlakeCount,
+  type Flake,
+  type SnowStep,
+} from './snow.ts'
 
 const half = (): number => 0.5
 
@@ -55,5 +64,41 @@ describe('hasFallenOut', () => {
   it('är sant först när hela flingan är nedanför ytan', () => {
     expect(hasFallenOut({ ...flake, y: 601 }, 600)).toBe(false)
     expect(hasFallenOut({ ...flake, y: 603 }, 600)).toBe(true)
+  })
+})
+
+describe('advanceSnow', () => {
+  const step: SnowStep = { intensity: 'light', width: 1920, height: 1080, seconds: 0.016, time: 0 }
+  const target = targetFlakeCount('light', 1920, 1080)
+
+  it('fyller ytan direkt första gången det ska snöa', () => {
+    const next = advanceSnow(initialSnowState(), step, half)
+    expect(next.flakes).toHaveLength(target)
+    expect(next.filled).toBe(true)
+  })
+
+  it('fyller inte ytan när snön är avstängd', () => {
+    const next = advanceSnow(initialSnowState(), { ...step, intensity: 'none' }, half)
+    expect(next.flakes).toHaveLength(0)
+    expect(next.filled).toBe(false)
+  })
+
+  it('fyller bara ytan en gång, sedan kommer nya flingor gradvis', () => {
+    const next = advanceSnow({ flakes: [], filled: true, spawnBudget: 0 }, { ...step, seconds: 1 }, half)
+    expect(next.flakes).toHaveLength(5)
+    expect(next.flakes.every((created) => created.y < 0)).toBe(true)
+  })
+
+  it('skapar inga nya flingor när snön stängs av, men låter de som faller dala klart', () => {
+    const state = { flakes: [flake], filled: true, spawnBudget: 5 }
+    const next = advanceSnow(state, { ...step, intensity: 'none', seconds: 0.5 }, half)
+    expect(next.flakes).toHaveLength(1)
+    expect(next.flakes[0].y).toBe(70)
+  })
+
+  it('tar bort flingor som har fallit ut nedtill', () => {
+    const state = { flakes: [{ ...flake, y: 1079 }], filled: true, spawnBudget: 0 }
+    const next = advanceSnow(state, { ...step, intensity: 'none', seconds: 1 }, half)
+    expect(next.flakes).toHaveLength(0)
   })
 })
