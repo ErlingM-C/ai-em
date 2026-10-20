@@ -1,4 +1,4 @@
-import type { Background, CalendarConfig, Door } from './config.ts'
+import { DOOR_COUNT, type Background, type CalendarConfig, type Door } from './config.ts'
 
 export type ValidationResult =
   | { ok: true; config: CalendarConfig }
@@ -9,7 +9,6 @@ export type ValidationOptions = {
   allowRelativeUrls: boolean
 }
 
-const DOOR_COUNT = 24
 const MIN_YEAR = 2000
 const MAX_YEAR = 2100
 /** Tillåtna format för bakgrundsbilden: 16:9 och 16:10. */

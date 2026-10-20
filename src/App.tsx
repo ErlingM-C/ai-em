@@ -12,35 +12,37 @@ import { readOrigin, readPreviewParam } from './io/location.ts'
 import { readPrefersReducedMotion } from './io/motion.ts'
 import type { CalendarConfig } from './lib/config.ts'
 import { isDoorOpenable } from './lib/isDoorOpenable.ts'
+import { openedDoorsKey } from './lib/openedDoorsStorage.ts'
 
 type CalendarControllerProps = {
   config: CalendarConfig
+  configUrl: string
 }
 
 /** Styr kalendern: vilka luckor som går att öppna och vad som händer vid klick. */
-function CalendarController({ config }: CalendarControllerProps) {
+function CalendarController({ config, configUrl }: CalendarControllerProps) {
   const [today] = useState(readToday)
   const [previewMode] = useState(readPreviewParam)
-  const { openedDays, openDoor, closeDoor } = useOpenedDoors()
+  const { openedDays, openDoor, closeDoor } = useOpenedDoors(openedDoorsKey(configUrl, previewMode))
   const [message, setMessage] = useState<string | null>(null)
   const [shown, setShown] = useState<{ day: number; origin: HTMLElement } | null>(null)
   const [reducedMotion] = useState(readPrefersReducedMotion)
 
-  const doors: DoorView[] = config.doors.map((door) => ({
-    door,
-    isOpen: openedDays.has(door.day),
-    isOpenable: isDoorOpenable(door.day, config.year, today, previewMode),
-  }))
+  // En sparad lucka visas bara som öppen om den får öppnas idag, så att datumspärren gäller även för sparade luckor.
+  const doors: DoorView[] = config.doors.map((door) => {
+    const isOpenable = isDoorOpenable(door.day, config.year, today, previewMode)
+    return { door, isOpenable, isOpen: isOpenable && openedDays.has(door.day) }
+  })
 
   function handleDoorClick(day: number): void {
-    if (openedDays.has(day)) {
+    if (!isDoorOpenable(day, config.year, today, previewMode)) {
+      setMessage(`Lucka ${day} går att öppna från och med ${day} december ${config.year}.`)
+    } else if (openedDays.has(day)) {
       closeDoor(day)
       setMessage(null)
-    } else if (isDoorOpenable(day, config.year, today, previewMode)) {
+    } else {
       openDoor(day)
       setMessage(null)
-    } else {
-      setMessage(`Lucka ${day} går att öppna från och med ${day} december ${config.year}.`)
     }
   }
 
@@ -89,7 +91,7 @@ function App() {
     case 'error':
       return <ErrorPage errors={state.errors} />
     case 'ready':
-      return <CalendarController config={state.config} />
+      return <CalendarController config={state.config} configUrl={state.configUrl} />
   }
 }
 

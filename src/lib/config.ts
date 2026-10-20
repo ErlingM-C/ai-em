@@ -1,3 +1,6 @@
+/** Antal luckor i en kalender, en för varje dag 1–24 december. */
+export const DOOR_COUNT = 24
+
 export type Background = {
   image: string
   width: number

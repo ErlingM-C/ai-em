@@ -9,7 +9,7 @@ export type CalendarConfigState =
   | { status: 'missing' }
   | { status: 'loading' }
   | { status: 'error'; errors: string[] }
-  | { status: 'ready'; config: CalendarConfig }
+  | { status: 'ready'; config: CalendarConfig; configUrl: string }
 
 async function loadConfig(param: string, signal: AbortSignal): Promise<CalendarConfigState> {
   const source = resolveConfigSource(param)
@@ -21,7 +21,9 @@ async function loadConfig(param: string, signal: AbortSignal): Promise<CalendarC
     return { status: 'error', errors: [fetched.error] }
   }
   const result = validateConfig(fetched.data, { allowRelativeUrls: source.allowRelativeUrls })
-  return result.ok ? { status: 'ready', config: result.config } : { status: 'error', errors: result.errors }
+  return result.ok
+    ? { status: 'ready', config: result.config, configUrl: source.url }
+    : { status: 'error', errors: result.errors }
 }
 
 export function useCalendarConfig(): CalendarConfigState {
