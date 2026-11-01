@@ -1,5 +1,7 @@
 # Digital adventskalender
 
+[![CI/CD](https://github.com/ErlingM-C/ai-em/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/ErlingM-C/ai-em/actions/workflows/ci-cd.yml)
+
 En adventskalender på webben med 24 luckor, där vem som helst kan göra en egen kalender med familjebilder genom att dela en länk till en JSON-fil.
 
 - **Live:** https://erlingm-c.github.io/ai-em/
