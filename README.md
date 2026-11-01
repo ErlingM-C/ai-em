@@ -137,7 +137,7 @@ Sidan kan också publiceras på GitHub Pages, på https://erlingm-c.github.io/ai
 
 Första gången: välj *Settings → Pages → Source: GitHub Actions* i repot på GitHub.
 
-Publicera så här: *Actions → Deploy till GitHub Pages → Run workflow*. Arbetsflödet ([.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml)) kör testerna och `npm run build:pages` och publicerar sedan `dist/`. Det körs bara manuellt.
+Arbetsflödet [.github/workflows/ci-cd.yml](.github/workflows/ci-cd.yml) kör lint, tester och `npm run build:pages` för varje pull request mot `main` och varje push till `main`. Vid push till `main` publiceras `dist/` sedan automatiskt, men bara om alla kontroller gått igenom. Det går också att publicera om manuellt: *Actions → CI/CD → Run workflow*. Inga GitHub Secrets behövs.
 
 GitHub Pages kan inte sätta egna HTTP-headers. `npm run build:pages` lägger därför in Content-Security-Policy och Referrer-Policy från `firebase.json` som meta-taggar i `index.html`. `frame-ancestors`, `X-Content-Type-Options`, `Cross-Origin-Opener-Policy`, `Permissions-Policy` och HSTS går inte att sätta så. På GitHub Pages är skyddet alltså något svagare än på Firebase.
 
