@@ -3,7 +3,7 @@
   "title": "Exempelkalender",
   "year": 2026,
   "background": {
-    "image": "/examples/demo/bakgrund.svg",
+    "image": "demo/bakgrund.svg",
     "width": 1920,
     "height": 1200
   },
@@ -14,7 +14,7 @@
       "y": 143,
       "width": 185,
       "height": 185,
-      "image": "/examples/demo/dag17.svg",
+      "image": "demo/dag17.svg",
       "alt": "Ett stort 17 och ordet december",
       "text": "Ta fram julpyntet."
     },
@@ -24,7 +24,7 @@
       "y": 156,
       "width": 170,
       "height": 170,
-      "image": "/examples/demo/dag04.svg",
+      "image": "demo/dag04.svg",
       "alt": "Ett stort 4 och ordet december",
       "text": "Glöm inte att vattna julgranen."
     },
@@ -34,7 +34,7 @@
       "y": 138,
       "width": 200,
       "height": 200,
-      "image": "/examples/demo/dag22.svg",
+      "image": "demo/dag22.svg",
       "alt": "Ett stort 22 och ordet december",
       "text": "Dags att köpa granen."
     },
@@ -44,7 +44,7 @@
       "y": 151,
       "width": 185,
       "height": 185,
-      "image": "/examples/demo/dag09.svg",
+      "image": "demo/dag09.svg",
       "alt": "Ett stort 9 och ordet december",
       "text": "Dags att slå in paket."
     },
@@ -54,7 +54,7 @@
       "y": 159,
       "width": 185,
       "height": 185,
-      "image": "/examples/demo/dag01.svg",
+      "image": "demo/dag01.svg",
       "alt": "Ett stort 1 och ordet december",
       "text": "Välkommen till exempelkalendern!"
     },
@@ -64,7 +64,7 @@
       "y": 146,
       "width": 200,
       "height": 200,
-      "image": "/examples/demo/dag14.svg",
+      "image": "demo/dag14.svg",
       "alt": "Ett stort 14 och ordet december",
       "text": "Bara tio dagar kvar."
     },
@@ -74,7 +74,7 @@
       "y": 389,
       "width": 215,
       "height": 215,
-      "image": "/examples/demo/dag11.svg",
+      "image": "demo/dag11.svg",
       "alt": "Ett stort 11 och ordet december",
       "text": "Skicka ett julkort till någon."
     },
@@ -84,7 +84,7 @@
       "y": 380,
       "width": 170,
       "height": 170,
-      "image": "/examples/demo/dag20.svg",
+      "image": "demo/dag20.svg",
       "alt": "Ett stort 20 och ordet december",
       "text": "Vinterns längsta natt närmar sig."
     },
@@ -94,7 +94,7 @@
       "y": 394,
       "width": 200,
       "height": 200,
-      "image": "/examples/demo/dag06.svg",
+      "image": "demo/dag06.svg",
       "alt": "Ett stort 6 och ordet december",
       "text": "Pepparkaksdeg i kylen?"
     },
@@ -104,7 +104,7 @@
       "y": 376,
       "width": 170,
       "height": 170,
-      "image": "/examples/demo/dag24.jpg",
+      "image": "demo/dag24.jpg",
       "alt": "Tre stora guldglänsande julgranskulor under en gran pyntad med små kulor",
       "text": "God jul!",
       "source": {
@@ -122,7 +122,7 @@
       "y": 385,
       "width": 215,
       "height": 215,
-      "image": "/examples/demo/dag15.svg",
+      "image": "demo/dag15.svg",
       "alt": "Ett stort 15 och ordet december",
       "text": "Gör en snölykta."
     },
@@ -132,7 +132,7 @@
       "y": 397,
       "width": 215,
       "height": 215,
-      "image": "/examples/demo/dag03.svg",
+      "image": "demo/dag03.svg",
       "alt": "Ett stort 3 och ordet december",
       "text": "Nu tänds det första ljuset."
     },
@@ -142,7 +142,7 @@
       "y": 632,
       "width": 170,
       "height": 170,
-      "image": "/examples/demo/dag08.svg",
+      "image": "demo/dag08.svg",
       "alt": "Ett stort 8 och ordet december",
       "text": "Vem har gömt tomtenissen?"
     },
@@ -152,7 +152,7 @@
       "y": 627,
       "width": 185,
       "height": 185,
-      "image": "/examples/demo/dag13.svg",
+      "image": "demo/dag13.svg",
       "alt": "Ett stort 13 och ordet december",
       "text": "Luciadagen – sjung med!"
     },
@@ -162,7 +162,7 @@
       "y": 638,
       "width": 200,
       "height": 200,
-      "image": "/examples/demo/dag02.svg",
+      "image": "demo/dag02.svg",
       "alt": "Ett stort 2 och ordet december",
       "text": "Dags att skriva önskelista."
     },
@@ -172,7 +172,7 @@
       "y": 621,
       "width": 215,
       "height": 215,
-      "image": "/examples/demo/dag19.svg",
+      "image": "demo/dag19.svg",
       "alt": "Ett stort 19 och ordet december",
       "text": "Ett pussel för hela familjen."
     },
@@ -182,7 +182,7 @@
       "y": 617,
       "width": 215,
       "height": 215,
-      "image": "/examples/demo/dag23.svg",
+      "image": "demo/dag23.svg",
       "alt": "Ett stort 23 och ordet december",
       "text": "Dan före dan före jul."
     },
@@ -192,7 +192,7 @@
       "y": 630,
       "width": 200,
       "height": 200,
-      "image": "/examples/demo/dag10.svg",
+      "image": "demo/dag10.svg",
       "alt": "Ett stort 10 och ordet december",
       "text": "Lyssna på din favoritjullåt."
     },
@@ -202,7 +202,7 @@
       "y": 859,
       "width": 185,
       "height": 185,
-      "image": "/examples/demo/dag21.svg",
+      "image": "demo/dag21.svg",
       "alt": "Ett stort 21 och ordet december",
       "text": "Vintersolståndet – nu vänder det."
     },
@@ -212,7 +212,7 @@
       "y": 875,
       "width": 185,
       "height": 185,
-      "image": "/examples/demo/dag05.svg",
+      "image": "demo/dag05.svg",
       "alt": "Ett stort 5 och ordet december",
       "text": "En kopp varm choklad gör underverk."
     },
@@ -222,7 +222,7 @@
       "y": 868,
       "width": 170,
       "height": 170,
-      "image": "/examples/demo/dag12.svg",
+      "image": "demo/dag12.svg",
       "alt": "Ett stort 12 och ordet december",
       "text": "Lussekatter till frukost?"
     },
@@ -232,7 +232,7 @@
       "y": 862,
       "width": 200,
       "height": 200,
-      "image": "/examples/demo/dag18.svg",
+      "image": "demo/dag18.svg",
       "alt": "Ett stort 18 och ordet december",
       "text": "Bjud grannen på glögg."
     },
@@ -242,7 +242,7 @@
       "y": 873,
       "width": 215,
       "height": 215,
-      "image": "/examples/demo/dag07.svg",
+      "image": "demo/dag07.svg",
       "alt": "Ett stort 7 och ordet december",
       "text": "Gå en promenad i snön."
     },
@@ -252,7 +252,7 @@
       "y": 864,
       "width": 170,
       "height": 170,
-      "image": "/examples/demo/dag16.svg",
+      "image": "demo/dag16.svg",
       "alt": "Ett stort 16 och ordet december",
       "text": "Saffran, russin och mandel."
     }

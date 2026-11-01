@@ -2,11 +2,12 @@ import StatusPage from './StatusPage.tsx'
 
 type StartPageProps = {
   origin: string
+  /** Sökvägen där webbplatsen ligger, till exempel "/" eller "/ai-em/". */
+  basePath: string
 }
 
-const DEMO_LINK = '/?config=/examples/demo.json&preview=1'
-
-function StartPage({ origin }: StartPageProps) {
+function StartPage({ origin, basePath }: StartPageProps) {
+  const demoJson = `${basePath}examples/demo.json`
   return (
     <StatusPage title="Gör din egen adventskalender">
       <p>
@@ -14,11 +15,11 @@ function StartPage({ origin }: StartPageProps) {
         börjar med <code>https://</code> och dela en länk som denna:
       </p>
       <p>
-        <code>{`${origin}/?config=https://example.com/min-kalender.json`}</code>
+        <code>{`${origin}${basePath}?config=https://example.com/min-kalender.json`}</code>
       </p>
       <p>
-        <a href={DEMO_LINK}>Se exempelkalendern</a> eller titta på{' '}
-        <a href="/examples/demo.json">exemplets JSON-fil</a>.
+        <a href={`${basePath}?config=${demoJson}&preview=1`}>Se exempelkalendern</a> eller titta på{' '}
+        <a href={demoJson}>exemplets JSON-fil</a>.
       </p>
     </StatusPage>
   )

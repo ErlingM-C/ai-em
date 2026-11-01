@@ -93,7 +93,7 @@ npm run dev
 | http://localhost:5173/ | Startsidan med instruktioner |
 | http://localhost:5173/?config=http://example.com/x.json | Felsidan: adressen måste börja med `https://` |
 
-Bara exempelkalendrar under `/examples/` får ligga på samma webbplats och använda relativa sökvägar. Alla andra kalenderfiler och bilder måste ha adresser som börjar med `https://`.
+Bara exempelkalendrar under `/examples/` får ligga på samma webbplats och använda relativa sökvägar. En relativ bildsökväg, som `demo/dag01.svg`, räknas från kalenderfilens adress. Alla andra kalenderfiler och bilder måste ha adresser som börjar med `https://`.
 
 **2. Automatiska tester.** Testerna gäller logiken i `src/lib/`, bland annat valideringen av JSON-filen, datumspärren och att exempelkalendern följer formatet:
 
@@ -131,6 +131,18 @@ npm run build
 firebase deploy --only hosting
 ```
 
+### GitHub Pages
+
+Sidan kan också publiceras på GitHub Pages, på https://erlingm-c.github.io/ai-em/. Där ligger den i undermappen `/ai-em/`, så exempelkalendern öppnas med https://erlingm-c.github.io/ai-em/?config=/ai-em/examples/demo.json&preview=1.
+
+Första gången: välj *Settings → Pages → Source: GitHub Actions* i repot på GitHub.
+
+Publicera så här: *Actions → Deploy till GitHub Pages → Run workflow*. Arbetsflödet ([.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml)) kör testerna och `npm run build:pages` och publicerar sedan `dist/`. Det körs bara manuellt.
+
+GitHub Pages kan inte sätta egna HTTP-headers. `npm run build:pages` lägger därför in Content-Security-Policy och Referrer-Policy från `firebase.json` som meta-taggar i `index.html`. `frame-ancestors`, `X-Content-Type-Options`, `Cross-Origin-Opener-Policy`, `Permissions-Policy` och HSTS går inte att sätta så. På GitHub Pages är skyddet alltså något svagare än på Firebase.
+
+Bygget går att testa lokalt med `npm run build:pages` och `npx vite preview --base=/ai-em/`. I Git Bash behöver kommandot `MSYS_NO_PATHCONV=1` före sig, annars görs `/ai-em/` om till en Windows-sökväg.
+
 ## Projektstruktur
 
 | Mapp | Innehåll |
@@ -145,6 +157,6 @@ Arkitekturprinciper och regler för utvecklingen finns i [CLAUDE.md](CLAUDE.md).
 
 ## Teknik
 
-React, TypeScript, Vite, Vitest och CSS Modules. Sidan publiceras som statiska filer på Firebase Hosting.
+React, TypeScript, Vite, Vitest och CSS Modules. Sidan publiceras som statiska filer på Firebase Hosting och GitHub Pages.
 
 Fotot i lucka 24 i exempelkalendern är ["Under the Christmas tree."](https://commons.wikimedia.org/wiki/File:Under_the_Christmas_tree._(15867338637).jpg) av Bernard Spragg, med licensen [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/deed.en).

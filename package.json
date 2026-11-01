@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:pages": "tsc -b && vite build --base=/ai-em/ && node scripts/add-csp-meta.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint .",

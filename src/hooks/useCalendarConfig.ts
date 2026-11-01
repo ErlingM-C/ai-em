@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { fetchJson } from '../io/fetchJson.ts'
-import { readConfigParam } from '../io/location.ts'
+import { readBasePath, readConfigParam, readOrigin } from '../io/location.ts'
 import type { CalendarConfig } from '../lib/config.ts'
 import { resolveConfigSource } from '../lib/configSource.ts'
+import { resolveImageUrls } from '../lib/resolveImageUrls.ts'
 import { validateConfig } from '../lib/validateConfig.ts'
 
 export type CalendarConfigState =
@@ -15,7 +16,7 @@ export type CalendarConfigState =
 const UNEXPECTED_ERROR = 'Något oväntat gick fel när kalendern lästes in. Ladda om sidan och försök igen.'
 
 async function loadConfig(param: string, signal: AbortSignal): Promise<CalendarConfigState> {
-  const source = resolveConfigSource(param)
+  const source = resolveConfigSource(param, readBasePath())
   if (!source.ok) {
     return { status: 'error', errors: [source.error] }
   }
@@ -24,9 +25,13 @@ async function loadConfig(param: string, signal: AbortSignal): Promise<CalendarC
     return { status: 'error', errors: [fetched.error] }
   }
   const result = validateConfig(fetched.data, { allowRelativeUrls: source.allowRelativeUrls })
-  return result.ok
-    ? { status: 'ready', config: result.config, configUrl: source.url }
-    : { status: 'error', errors: result.errors }
+  if (!result.ok) {
+    return { status: 'error', errors: result.errors }
+  }
+  const config = source.allowRelativeUrls
+    ? resolveImageUrls(result.config, new URL(source.url, readOrigin()).href)
+    : result.config
+  return { status: 'ready', config, configUrl: source.url }
 }
 
 export function useCalendarConfig(): CalendarConfigState {

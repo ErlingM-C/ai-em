@@ -57,6 +57,12 @@ Typen finns i `src/lib/config.ts` och kontrolleras av `validateConfig` i `src/li
 - Förhandsversion att dela för test: `npm run build && firebase hosting:channel:deploy <namn>`
 - Produktion: `npm run build && firebase deploy --only hosting`. Det görs av människan, inte av agenten.
 
+## Driftsättning (GitHub Pages)
+
+- Sidan kan också publiceras på `https://erlingm-c.github.io/ai-em/`, alltså i undermappen `/ai-em/`. `npm run build:pages` bygger med `--base=/ai-em/` och lägger in CSP och Referrer-Policy från `firebase.json` som meta-taggar (`scripts/add-csp-meta.mjs`), eftersom GitHub Pages inte kan sätta headers.
+- Koden får inte anta att webbplatsen ligger i `/`. Använd `readBasePath()` i `src/io/location.ts` för länkar till den egna webbplatsen.
+- Deploy sker med arbetsflödet `.github/workflows/deploy-pages.yml`, som just nu bara körs manuellt (`workflow_dispatch`). Det startas av människan, inte av agenten.
+
 ## Arkitekturprinciper
 
 1. **All I/O sker i ett lager.** Endast `src/io/` hämtar JSON, läser URL-parametrar, `localStorage` och aktuellt datum. Hooks anropar io-funktionerna. Komponenter och `lib/` gör det aldrig.
@@ -92,5 +98,5 @@ Typen finns i `src/lib/config.ts` och kontrolleras av `validateConfig` i `src/li
 
 - Gör små, avgränsade ändringar och förklara kort vad som ändrats.
 - Om ett krav är otydligt, fråga hellre än att gissa.
-- Utveckla med `npm run dev` och öppna `http://localhost:5173/?config=/examples/demo.json&preview=1`. Relativa config-sökvägar till den egna webbplatsen tillåts bara för exempelkalendern.
+- Utveckla med `npm run dev` och öppna `http://localhost:5173/?config=/examples/demo.json&preview=1`. Relativa config-sökvägar till den egna webbplatsen tillåts bara för exempelkalendern. Relativa bildsökvägar i den räknas från kalenderfilens adress.
 - Testa produktionsbygget med samma headers som i drift: `npm run build && firebase emulators:start --only hosting`. Då upptäcks fel i Content-Security-Policy innan deploy.

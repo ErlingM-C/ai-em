@@ -166,6 +166,11 @@ describe('isAllowedUrl', () => {
     ['/examples/a.jpg', false, false],
     ['/examples/a.jpg', true, true],
     ['//evil.example/a.jpg', true, false],
+    ['demo/a.jpg', false, false],
+    ['demo/a.jpg', true, true],
+    ['\\\\evil.example/a.jpg', true, false],
+    ['javascript:alert(1)', true, false],
+    ['JavaScript:alert(1)', true, false],
     ['inte en adress', false, false],
   ])('%s med relativa=%s ger %s', (url, allowRelative, expected) => {
     expect(isAllowedUrl(url, allowRelative)).toBe(expected)
