@@ -8,7 +8,7 @@ import StatusPage from './components/StatusPage.tsx'
 import { useCalendarConfig } from './hooks/useCalendarConfig.ts'
 import { useOpenedDoors } from './hooks/useOpenedDoors.ts'
 import { readToday } from './io/clock.ts'
-import { readOrigin, readPreviewParam } from './io/location.ts'
+import { readBasePath, readOrigin, readPreviewParam } from './io/location.ts'
 import { readPrefersReducedMotion } from './io/motion.ts'
 import type { CalendarConfig } from './lib/config.ts'
 import { isDoorOpenable } from './lib/isDoorOpenable.ts'
@@ -78,10 +78,11 @@ function CalendarController({ config, configUrl }: CalendarControllerProps) {
 function App() {
   const state = useCalendarConfig()
   const [origin] = useState(readOrigin)
+  const [basePath] = useState(readBasePath)
 
   switch (state.status) {
     case 'missing':
-      return <StartPage origin={origin} />
+      return <StartPage origin={origin} basePath={basePath} />
     case 'loading':
       return (
         <StatusPage title="Adventskalender">

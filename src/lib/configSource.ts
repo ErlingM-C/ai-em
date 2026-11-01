@@ -2,18 +2,17 @@ export type ConfigSource =
   | { ok: true; url: string; allowRelativeUrls: boolean }
   | { ok: false; error: string }
 
-const EXAMPLES_PREFIX = '/examples/'
-
-function isExamplePath(value: string): boolean {
-  return value.startsWith(EXAMPLES_PREFIX) && !value.includes('..') && !value.includes('//')
+function isExamplePath(value: string, basePath: string): boolean {
+  return value.startsWith(`${basePath}examples/`) && !value.includes('..') && !value.includes('//')
 }
 
 /**
  * Avgör om config-adressen får användas. Bara https-adresser tillåts,
- * förutom exempelkalendrar på den egna webbplatsen under /examples/.
+ * förutom exempelkalendrar på den egna webbplatsen under <basePath>examples/.
+ * basePath är sökvägen där webbplatsen ligger, till exempel "/" eller "/ai-em/".
  */
-export function resolveConfigSource(value: string): ConfigSource {
-  if (isExamplePath(value)) {
+export function resolveConfigSource(value: string, basePath: string): ConfigSource {
+  if (isExamplePath(value, basePath)) {
     return { ok: true, url: value, allowRelativeUrls: true }
   }
   try {

@@ -5,7 +5,7 @@ export type ValidationResult =
   | { ok: false; errors: string[] }
 
 export type ValidationOptions = {
-  /** Tillåter sökvägar som börjar med "/" (bara för exempelkalendern). */
+  /** Tillåter relativa sökvägar, som "demo/dag1.svg" (bara för exempelkalendern). */
   allowRelativeUrls: boolean
 }
 
@@ -29,8 +29,16 @@ function isNonEmptyString(value: unknown): value is string {
   return typeof value === 'string' && value.trim() !== ''
 }
 
+/**
+ * Sant för en sökväg utan schema och värd, som "demo/dag1.svg" eller "/examples/dag1.svg".
+ * Bakåtsnedstreck underkänns, eftersom webbläsaren läser "\\" som "//" (en annan värd).
+ */
+function isRelativePath(value: string): boolean {
+  return !/^[a-z][a-z0-9+.-]*:/i.test(value) && !value.startsWith('//') && !value.includes('\\')
+}
+
 export function isAllowedUrl(value: string, allowRelativeUrls: boolean): boolean {
-  if (allowRelativeUrls && value.startsWith('/') && !value.startsWith('//')) {
+  if (allowRelativeUrls && isRelativePath(value)) {
     return true
   }
   try {

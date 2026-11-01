@@ -3,7 +3,7 @@ import { resolveConfigSource } from './configSource.ts'
 
 describe('resolveConfigSource', () => {
   it('godkänner en https-adress utan relativa bildsökvägar', () => {
-    expect(resolveConfigSource('https://example.com/kalender.json')).toEqual({
+    expect(resolveConfigSource('https://example.com/kalender.json', '/')).toEqual({
       ok: true,
       url: 'https://example.com/kalender.json',
       allowRelativeUrls: false,
@@ -11,11 +11,23 @@ describe('resolveConfigSource', () => {
   })
 
   it('godkänner exempelkalendern med relativa bildsökvägar', () => {
-    expect(resolveConfigSource('/examples/demo.json')).toEqual({
+    expect(resolveConfigSource('/examples/demo.json', '/')).toEqual({
       ok: true,
       url: '/examples/demo.json',
       allowRelativeUrls: true,
     })
+  })
+
+  it('godkänner exempelkalendern när webbplatsen ligger i en undermapp', () => {
+    expect(resolveConfigSource('/ai-em/examples/demo.json', '/ai-em/')).toEqual({
+      ok: true,
+      url: '/ai-em/examples/demo.json',
+      allowRelativeUrls: true,
+    })
+  })
+
+  it('underkänner exempelsökvägen utan undermappen när webbplatsen ligger i en', () => {
+    expect(resolveConfigSource('/examples/demo.json', '/ai-em/').ok).toBe(false)
   })
 
   it.each([
@@ -28,6 +40,6 @@ describe('resolveConfigSource', () => {
     'kalender.json',
     '',
   ])('underkänner %j', (value) => {
-    expect(resolveConfigSource(value).ok).toBe(false)
+    expect(resolveConfigSource(value, '/').ok).toBe(false)
   })
 })

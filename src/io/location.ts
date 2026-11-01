@@ -13,6 +13,11 @@ export function readOrigin(): string {
   return window.location.origin
 }
 
+/** Sökvägen där webbplatsen ligger, till exempel "/" på Firebase eller "/ai-em/" på GitHub Pages. */
+export function readBasePath(): string {
+  return import.meta.env.BASE_URL
+}
+
 /** Laddar om sidan, till exempel efter ett oväntat fel. */
 export function reloadPage(): void {
   window.location.reload()
