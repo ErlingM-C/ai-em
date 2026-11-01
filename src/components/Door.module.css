@@ -1,7 +1,10 @@
-/* Luckans plats i bakgrundsbilden. perspective ger djup åt luckan när den svänger upp. */
+/*
+ * Luckans plats i bakgrundsbilden. Den är en container, så att luckans
+ * perspektiv kan anges i cqw och följa luckans storlek (se .leaf).
+ */
 .slot {
+  container-type: size;
   position: absolute;
-  perspective: 600px;
   /* Ligger kvar ovanpå grannarna tills luckan har stängts helt. */
   transition: z-index 0s 900ms;
 }
@@ -73,21 +76,28 @@
  * Själva luckan: svänger runt vänsterkanten mot betraktaren, som en dörr.
  * Den ligger ovanpå bilden. Klick räknas mot luckans roterade form, så när
  * luckan är öppen träffar man bara den uppsvängda luckan.
+ *
+ * Perspektivet är sex gånger luckans bredd (600cqw) i stället för ett fast
+ * värde i px. Då förstoras den uppsvängda luckan lika mycket (ca 1,2 gånger)
+ * oavsett skärmstorlek och når inte in i grannluckorna på stora skärmar.
+ * Alla tillstånd har samma lista av transform-funktioner, så att övergångarna
+ * mellan dem animeras funktion för funktion.
  */
 .leaf {
   z-index: 1;
+  transform: perspective(600cqw) rotateY(0deg) scale(1);
   transform-origin: left center;
   transform-style: preserve-3d;
   transition: transform 900ms cubic-bezier(0.3, 0.7, 0.25, 1);
 }
 
 .leaf:hover:not(.open, .locked) {
-  transform: scale(1.04);
+  transform: perspective(600cqw) rotateY(0deg) scale(1.04);
 }
 
 /* Öppen lucka: står nästan vinkelrätt ut från bilden. */
 .open {
-  transform: rotateY(-105deg);
+  transform: perspective(600cqw) rotateY(-105deg) scale(1);
 }
 
 .locked {
@@ -151,6 +161,6 @@
   }
 
   .leaf:hover:not(.open, .locked) {
-    transform: none;
+    transform: perspective(600cqw) rotateY(0deg) scale(1);
   }
 }
