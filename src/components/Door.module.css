@@ -77,27 +77,28 @@
  * Den ligger ovanpå bilden. Klick räknas mot luckans roterade form, så när
  * luckan är öppen träffar man bara den uppsvängda luckan.
  *
- * Perspektivet är sex gånger luckans bredd (600cqw) i stället för ett fast
- * värde i px. Då förstoras den uppsvängda luckan lika mycket (ca 1,2 gånger)
- * oavsett skärmstorlek och når inte in i grannluckorna på stora skärmar.
+ * Perspektivet är fjorton gånger luckans bredd (1400cqw) i stället för ett fast
+ * värde i px. Då förstoras den uppsvängda luckan lika mycket (ca 1,07 gånger)
+ * oavsett skärmstorlek. Då når den inte in i grannluckorna, inte ens när
+ * glipan mellan raderna bara är 8 % av luckans höjd.
  * Alla tillstånd har samma lista av transform-funktioner, så att övergångarna
  * mellan dem animeras funktion för funktion.
  */
 .leaf {
   z-index: 1;
-  transform: perspective(600cqw) rotateY(0deg) scale(1);
+  transform: perspective(1400cqw) rotateY(0deg) scale(1);
   transform-origin: left center;
   transform-style: preserve-3d;
   transition: transform 900ms cubic-bezier(0.3, 0.7, 0.25, 1);
 }
 
 .leaf:hover:not(.open, .locked) {
-  transform: perspective(600cqw) rotateY(0deg) scale(1.04);
+  transform: perspective(1400cqw) rotateY(0deg) scale(1.04);
 }
 
 /* Öppen lucka: står nästan vinkelrätt ut från bilden. */
 .open {
-  transform: perspective(600cqw) rotateY(-105deg) scale(1);
+  transform: perspective(1400cqw) rotateY(-105deg) scale(1);
 }
 
 .locked {
@@ -161,6 +162,6 @@
   }
 
   .leaf:hover:not(.open, .locked) {
-    transform: perspective(600cqw) rotateY(0deg) scale(1);
+    transform: perspective(1400cqw) rotateY(0deg) scale(1);
   }
 }
