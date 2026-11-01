@@ -61,7 +61,7 @@ Typen finns i `src/lib/config.ts` och kontrolleras av `validateConfig` i `src/li
 
 - Sidan kan också publiceras på `https://erlingm-c.github.io/ai-em/`, alltså i undermappen `/ai-em/`. `npm run build:pages` bygger med `--base=/ai-em/` och lägger in CSP och Referrer-Policy från `firebase.json` som meta-taggar (`scripts/add-csp-meta.mjs`), eftersom GitHub Pages inte kan sätta headers.
 - Koden får inte anta att webbplatsen ligger i `/`. Använd `readBasePath()` i `src/io/location.ts` för länkar till den egna webbplatsen.
-- Deploy sker med arbetsflödet `.github/workflows/deploy-pages.yml`, som just nu bara körs manuellt (`workflow_dispatch`). Det startas av människan, inte av agenten.
+- CI/CD sker med arbetsflödet `.github/workflows/ci-cd.yml`. Det kör lint, tester och bygge för pull requests mot `main` och deployar till GitHub Pages vid push till `main`. Att slå ihop en gren med `main` är alltså en deploy. Det gör människan, inte agenten.
 
 ## Arkitekturprinciper
 

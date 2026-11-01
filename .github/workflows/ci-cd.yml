@@ -1,0 +1,84 @@
+# CI/CD för adventskalendern.
+#
+# - Pull request mot main: lint, tester och bygge. Ingen deploy.
+# - Push till main (t.ex. en sammanslagen pull request): samma kontroller, och
+#   om allt går igenom publiceras sidan på GitHub Pages
+#   (https://erlingm-c.github.io/ai-em/).
+# - Manuellt (Actions → CI/CD → Run workflow): som push till main, t.ex. för att
+#   publicera om utan en ny commit.
+#
+# Inga egna hemligheter behövs. Deployen till Pages autentiseras med GitHubs
+# inbyggda token och OIDC (id-token), som GitHub skapar för varje körning.
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# Minsta möjliga rättigheter som standard. Deploy-jobbet får sina egna nedan.
+permissions:
+  contents: read
+
+# En ny push till samma pull request avbryter den körning som redan pågår.
+# På main avbryts inget, så att varje commit kontrolleras.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  ci:
+    name: Lint, tester och bygge
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Hämta koden
+        uses: actions/checkout@v5
+
+      - name: Installera Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Installera beroenden
+        run: npm ci
+
+      - name: Lint (ESLint)
+        run: npm run lint
+
+      - name: Tester (Vitest)
+        run: npm test
+
+      # Kör typkontrollen (tsc) och bygger för GitHub Pages med CSP som meta-tagg.
+      - name: Bygg
+        run: npm run build:pages
+
+      - name: Spara bygget för deploy
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+
+  deploy:
+    name: Deploy till GitHub Pages
+    needs: ci
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    # Bara en deploy åt gången. En pågående deploy avbryts inte.
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    steps:
+      - name: Publicera
+        id: deployment
+        uses: actions/deploy-pages@v4
