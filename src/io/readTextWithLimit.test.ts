@@ -54,6 +54,28 @@ describe('readTextWithLimit', () => {
     expect(await readTextWithLimit(new Response(stream), 100)).toBe('jul å')
   })
 
+  it('ger null även om det inte går att avbryta ett för stort svar med Content-Length', async () => {
+    const stream = new ReadableStream<Uint8Array>({
+      cancel() {
+        throw new Error('går inte att avbryta')
+      },
+    })
+    const response = new Response(stream, { headers: { 'Content-Length': '5000' } })
+    expect(await readTextWithLimit(response, 100)).toBeNull()
+  })
+
+  it('ger null även om det inte går att avbryta ett för stort svar under läsningen', async () => {
+    const stream = new ReadableStream<Uint8Array>({
+      start(controller) {
+        controller.enqueue(new TextEncoder().encode('x'.repeat(200)))
+      },
+      cancel() {
+        throw new Error('går inte att avbryta')
+      },
+    })
+    expect(await readTextWithLimit(new Response(stream), 100)).toBeNull()
+  })
+
   it('ger tom text för ett svar utan innehåll', async () => {
     expect(await readTextWithLimit(new Response(null), 100)).toBe('')
   })
