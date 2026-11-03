@@ -58,9 +58,10 @@ Tips:
 - Koordinaterna för luckorna går att läsa av i vilket bildprogram som helst, även Paint.
 - Gör luckorna minst cirka 1/12 av bildens bredd, alltså cirka 160 px i en bild som är 1920 px bred. Annars blir de svåra att träffa i mobilen.
 - Servern där JSON-filen ligger måste tillåta att filen hämtas från andra webbplatser (CORS). Annars visar kalendern ett felmeddelande om att filen inte gick att hämta.
+- Länka direkt till själva JSON-filen, till exempel med knappen "Raw" på GitHub. En delningslänk från till exempel Google Drive eller Dropbox leder till en webbsida och inte till filen. Kalendern säger då att adressen pekar på en webbsida.
 - Lägg till `&preview=1` i länken för att låsa upp alla luckor och testa kalendern före december.
 
-Om något i filen är fel visar kalendern en lista med det som behöver rättas. Ett fullständigt exempel finns i [public/examples/demo.json](public/examples/demo.json).
+Om något i filen är fel visar kalendern en lista med det som behöver rättas. Meddelandena visar vilket värde som var fel, till exempel `year måste vara ett årtal mellan 2000 och 2100 (fick "2026")`. Om filen inte är giltig JSON anges raden och kolumnen där felet finns, om webbläsaren talar om det (Chrome och Firefox gör det, Safari inte). Om filen inte går att hämta förklarar kalendern varför, till exempel att filen inte finns, att den inte är delad eller att enheten saknar internet. Ett fullständigt exempel finns i [public/examples/demo.json](public/examples/demo.json).
 
 ### Publicera din JSON-fil
 
@@ -181,7 +182,7 @@ Bygget går att testa lokalt med `npm run build:pages` och `npx vite preview --b
 
 | Mapp | Innehåll |
 |------|----------|
-| `src/io/` | All kontakt med omvärlden: hämtning av JSON-filen, URL-parametrar, datum och systeminställningar |
+| `src/io/` | All kontakt med omvärlden: hämtning av JSON-filen, URL-parametrar, datum, systeminställningar och när sidan blir synlig |
 | `src/lib/` | Ren logik med tester, till exempel validering, datumspärr och placering av luckor |
 | `src/hooks/` | Hooks som binder ihop io-lagret och logiken |
 | `src/components/` | Komponenter som bara visar det de får via props |
