@@ -14,6 +14,12 @@ function neverResponds(_url: string, init?: RequestInit): Promise<Response> {
   })
 }
 
+/** Felmeddelandet från en hämtning, eller en tom text om den lyckades. */
+async function errorOf(): Promise<string> {
+  const result = await fetchJson(URL, new AbortController().signal)
+  return result.ok ? '' : result.error
+}
+
 describe('fetchJson', () => {
   beforeEach(() => {
     vi.useFakeTimers()
@@ -56,6 +62,46 @@ describe('fetchJson', () => {
     const settled = await result
     expect(settled.ok ? '' : settled.error).not.toContain('svarade inte inom')
     expect(vi.getTimerCount()).toBe(0)
+  })
+
+  it.each([
+    [404, 'finns inte'],
+    [410, 'finns inte'],
+    [401, 'nekade åtkomst'],
+    [403, 'nekade åtkomst'],
+    [429, 'för många förfrågningar'],
+    [503, 'tillfälliga problem'],
+    [418, 'felkod 418'],
+  ])('förklarar felkoden %i', async (status, expected) => {
+    vi.stubGlobal('fetch', () => Promise.resolve(new Response('', { status })))
+    expect(await errorOf()).toContain(expected)
+  })
+
+  it('säger att filen är tom', async () => {
+    vi.stubGlobal('fetch', () => Promise.resolve(new Response(' \n')))
+    expect(await errorOf()).toContain('är tom')
+  })
+
+  it('säger att adressen pekar på en webbsida när svaret är HTML', async () => {
+    vi.stubGlobal('fetch', () => Promise.resolve(new Response('\n<!DOCTYPE html><html></html>')))
+    expect(await errorOf()).toContain('pekar på en webbsida')
+  })
+
+  it('anger var JSON-felet finns', async () => {
+    vi.stubGlobal('fetch', () => Promise.resolve(new Response('{\n  "a": 1,\n}')))
+    expect(await errorOf()).toContain('rad 3, kolumn 1')
+  })
+
+  it('säger att enheten är offline när nätverket saknas', async () => {
+    vi.stubGlobal('fetch', () => Promise.reject(new TypeError('Failed to fetch')))
+    vi.stubGlobal('navigator', { onLine: false })
+    expect(await errorOf()).toContain('inte vara ansluten till internet')
+  })
+
+  it('nämner CORS när nätverksfelet inte beror på att enheten är offline', async () => {
+    vi.stubGlobal('fetch', () => Promise.reject(new TypeError('Failed to fetch')))
+    vi.stubGlobal('navigator', { onLine: true })
+    expect(await errorOf()).toContain('CORS')
   })
 
   it('avbryter direkt om signalen redan är avbruten', async () => {

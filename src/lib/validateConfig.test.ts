@@ -64,11 +64,26 @@ describe('validateConfig', () => {
   })
 
   it('kräver version 1', () => {
-    expect(errorsOf({ ...makeConfig(), version: 2 })).toEqual(['version måste vara 1.'])
+    expect(errorsOf({ ...makeConfig(), version: 2 })).toEqual(['version måste vara 1 (fick 2).'])
   })
 
   it('kräver en titel som inte är tom', () => {
     expect(errorsOf({ ...makeConfig(), title: '  ' })).toEqual(['title saknas eller är tom.'])
+  })
+
+  it('säger att version saknas', () => {
+    expect(errorsOf({ ...makeConfig(), version: undefined })).toEqual(['version måste vara 1 (saknas).'])
+  })
+
+  it('visar det felaktiga året', () => {
+    expect(errorsOf({ ...makeConfig(), year: '2026' })).toEqual([
+      'year måste vara ett årtal mellan 2000 och 2100 (fick "2026").',
+    ])
+  })
+
+  it('kortar av långa felaktiga värden', () => {
+    const [error] = errorsOf({ ...makeConfig(), version: 'x'.repeat(100) })
+    expect(error).toBe(`version måste vara 1 (fick "${'x'.repeat(39)}…).`)
   })
 
   it.each([1999, 2101, 2026.5, '2026'])('underkänner året %j', (year) => {
@@ -108,6 +123,12 @@ describe('validateConfig', () => {
     expect(errorsOf(makeConfigWithDoor(1, { day }))[0]).toContain('day måste vara ett heltal')
   })
 
+  it('visar den felaktiga dagen', () => {
+    expect(errorsOf(makeConfigWithDoor(1, { day: 25 }))[0]).toBe(
+      'Lucka nummer 1 i listan: day måste vara ett heltal 1–24 (fick 25).',
+    )
+  })
+
   it('underkänner en lucka utanför bakgrundsbilden', () => {
     expect(errorsOf(makeConfigWithDoor(6, { x: 1800 }))).toContain(
       'Lucka 6 hamnar utanför bakgrundsbilden (1920×1080).',
@@ -116,13 +137,13 @@ describe('validateConfig', () => {
 
   it('underkänner negativa koordinater', () => {
     expect(errorsOf(makeConfigWithDoor(1, { x: -1 }))).toEqual([
-      'Lucka 1: x och y måste vara tal som är 0 eller större.',
+      'Lucka 1: x och y måste vara tal som är 0 eller större (x fick -1, y fick 40).',
     ])
   })
 
   it('underkänner en lucka utan storlek', () => {
     expect(errorsOf(makeConfigWithDoor(1, { width: 0 }))).toEqual([
-      'Lucka 1: width och height måste vara tal större än 0.',
+      'Lucka 1: width och height måste vara tal större än 0 (width fick 0, height fick 200).',
     ])
   })
 
