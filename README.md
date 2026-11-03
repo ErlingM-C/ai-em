@@ -2,11 +2,9 @@
 
 [![CI/CD](https://github.com/ErlingM-C/ai-em/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/ErlingM-C/ai-em/actions/workflows/ci-cd.yml)
 
-En adventskalender på webben med 24 luckor, där vem som helst kan göra en egen kalender med familjebilder genom att dela en länk till en JSON-fil.
+Designade och utvecklade en digital adventskalender för webben med React, TypeScript (strict), Vite, Vitest och CSS Modules, publicerad med GitHub Pages via GitHub Actions, med hjälp av agentdriven utveckling (Claude Code). Projektet gör det enkelt att dela familjebilder på ett personligt sätt i juletid: vem som helst kan göra en egen kalender med 24 luckor, en per dag i december, genom att skriva en JSON-fil och dela en länk, utan att programmera eller sätta upp en egen webbplats. Projektet är tillgängligt på https://erlingm-c.github.io/ai-em/, med en exempelkalender på https://erlingm-c.github.io/ai-em/?config=/ai-em/examples/demo.json&preview=1.
 
-- **Live:** https://erlingm-c.github.io/ai-em/
-- **Exempelkalendern:** https://erlingm-c.github.io/ai-em/?config=/ai-em/examples/demo.json&preview=1
-- **Exempelkalenderns JSON-fil:** https://erlingm-c.github.io/ai-em/examples/demo.json ([källfilen i repot](public/examples/demo.json))
+Exempelkalenderns JSON-fil finns på https://erlingm-c.github.io/ai-em/examples/demo.json ([källfilen i repot](public/examples/demo.json)).
 
 ## Vad det gör
 
