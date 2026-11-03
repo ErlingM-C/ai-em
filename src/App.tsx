@@ -7,7 +7,7 @@ import StartPage from './components/StartPage.tsx'
 import StatusPage from './components/StatusPage.tsx'
 import { useCalendarConfig } from './hooks/useCalendarConfig.ts'
 import { useOpenedDoors } from './hooks/useOpenedDoors.ts'
-import { readToday } from './io/clock.ts'
+import { useToday } from './hooks/useToday.ts'
 import { readBasePath, readOrigin, readPreviewParam } from './io/location.ts'
 import { readPrefersReducedMotion } from './io/motion.ts'
 import type { CalendarConfig } from './lib/config.ts'
@@ -21,7 +21,7 @@ type CalendarControllerProps = {
 
 /** Styr kalendern: vilka luckor som går att öppna och vad som händer vid klick. */
 function CalendarController({ config, configUrl }: CalendarControllerProps) {
-  const [today] = useState(readToday)
+  const today = useToday()
   const [previewMode] = useState(readPreviewParam)
   const { openedDays, openDoor, closeDoor } = useOpenedDoors(openedDoorsKey(configUrl, previewMode))
   const [message, setMessage] = useState<string | null>(null)
