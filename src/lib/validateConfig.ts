@@ -29,6 +29,18 @@ function isNonEmptyString(value: unknown): value is string {
   return typeof value === 'string' && value.trim() !== ''
 }
 
+/** Längsta värde som visas i ett felmeddelande. Längre värden kortas av. */
+const MAX_SHOWN_LENGTH = 40
+
+/** Beskriver ett felaktigt värde för felmeddelandet, till exempel "fick 2" eller "saknas". */
+function received(value: unknown): string {
+  if (value === undefined) {
+    return 'saknas'
+  }
+  const shown = JSON.stringify(value)
+  return shown.length > MAX_SHOWN_LENGTH ? `fick ${shown.slice(0, MAX_SHOWN_LENGTH)}…` : `fick ${shown}`
+}
+
 /**
  * Sant för en sökväg utan schema och värd, som "demo/dag1.svg" eller "/examples/dag1.svg".
  * Bakåtsnedstreck underkänns, eftersom webbläsaren läser "\\" som "//" (en annan värd).
@@ -111,11 +123,13 @@ function validateDoorRect(
 ): Rect | undefined {
   const { x, y, width, height } = door
   if (!isFiniteNumber(x) || !isFiniteNumber(y) || x < 0 || y < 0) {
-    errors.push(`${label}: x och y måste vara tal som är 0 eller större.`)
+    errors.push(`${label}: x och y måste vara tal som är 0 eller större (x ${received(x)}, y ${received(y)}).`)
     return undefined
   }
   if (!isFiniteNumber(width) || !isFiniteNumber(height) || width <= 0 || height <= 0) {
-    errors.push(`${label}: width och height måste vara tal större än 0.`)
+    errors.push(
+      `${label}: width och height måste vara tal större än 0 (width ${received(width)}, height ${received(height)}).`,
+    )
     return undefined
   }
   if (background !== undefined && (x + width > background.width || y + height > background.height)) {
@@ -140,7 +154,7 @@ function validateDoor(
   }
   const { day } = value
   if (!Number.isInteger(day) || !isFiniteNumber(day) || day < 1 || day > DOOR_COUNT) {
-    errors.push(`Lucka nummer ${index + 1} i listan: day måste vara ett heltal 1–${DOOR_COUNT}.`)
+    errors.push(`Lucka nummer ${index + 1} i listan: day måste vara ett heltal 1–${DOOR_COUNT} (${received(day)}).`)
     return undefined
   }
   const label = `Lucka ${day}`
@@ -220,13 +234,13 @@ export function validateConfig(data: unknown, options: ValidationOptions): Valid
   const errors: string[] = []
   const { version, title, year } = data
   if (version !== 1) {
-    errors.push('version måste vara 1.')
+    errors.push(`version måste vara 1 (${received(version)}).`)
   }
   if (!isNonEmptyString(title)) {
     errors.push('title saknas eller är tom.')
   }
   if (!Number.isInteger(year) || !isFiniteNumber(year) || year < MIN_YEAR || year > MAX_YEAR) {
-    errors.push(`year måste vara ett årtal mellan ${MIN_YEAR} och ${MAX_YEAR}.`)
+    errors.push(`year måste vara ett årtal mellan ${MIN_YEAR} och ${MAX_YEAR} (${received(year)}).`)
   }
   const background = validateBackground(data.background, options, errors)
   const doors = validateDoors(data.doors, background, options, errors)
